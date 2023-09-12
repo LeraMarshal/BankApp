@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-accounts
+      author: marshal
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    foreignKeyName: accounts_client_id_fkey
+                    referencedTableName: clients
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: BIGINT
+              - column:
+                  name: currency_code
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: varchar(50)
+                  constraints:
+                    nullable: false

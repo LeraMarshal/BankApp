@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-agreements
+      author: marshal
+      changes:
+        - createTable:
+            tableName: agreements
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    foreignKeyName: agreements_account_id_fkey
+                    referencedTableName: accounts
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    foreignKeyName: agreements_product_id_fkey
+                    referencedTableName: products
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: interest_rate
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: limit
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: varchar(50)
+                  constraints:
+                    nullable: false

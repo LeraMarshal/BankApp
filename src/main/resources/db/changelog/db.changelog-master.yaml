@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/db.changelog-managers.yaml
+  - include:
+      file: db/changelog/changeset/db.changelog-clients.yaml
+  - include:
+      file: db/changelog/changeset/db.changelog-accounts.yaml
+  - include:
+      file: db/changelog/changeset/db.changelog-products.yaml
+  - include:
+      file: db/changelog/changeset/db.changelog-agreements.yaml

@@ -1,0 +1,43 @@
+server:
+  shutdown: graceful
+  servlet:
+    context-path: /
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+spring:
+  main:
+    banner-mode: off
+
+  liquibase:
+    enabled: true
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/bankapp
+    username: postgres
+    password: admin
+
+    hikari:
+      pool-name: SpringBootJPAHikariCP
+      register-mbeans: true
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      max-lifetime: 2000000
+      idle-timeout: 30000
+
+  jpa:
+#    generate-ddl: false
+#    hibernate:
+#      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+    open-in-view: false
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    com.zaxxer.hikari.HikariConfig: DEBUG

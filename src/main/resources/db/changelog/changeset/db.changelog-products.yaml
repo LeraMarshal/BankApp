@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-products
+      author: marshal
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: manager_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    foreignKeyName: products_manager_id_fkey
+                    referencedTableName: managers
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency_code
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_rate
+                  type: integer
+              - column:
+                  name: limit
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
