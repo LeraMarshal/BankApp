@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-agreements
+      id: 20230916-05-agreements
       author: marshal
       changes:
         - createTable:
@@ -8,49 +8,59 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: account_id
-                  type: BIGINT
-                  autoIncrement: true
+                  type: bigint
                   constraints:
-                    foreignKeyName: agreements_account_id_fkey
+                    foreignKeyName: agreements_fk_account_id
                     referencedTableName: accounts
                     referencedColumnNames: id
                     nullable: false
               - column:
                   name: product_id
-                  type: BIGINT
-                  autoIncrement: true
+                  type: bigint
                   constraints:
-                    foreignKeyName: agreements_product_id_fkey
+                    foreignKeyName: agreements_fk_product_id
                     referencedTableName: products
                     referencedColumnNames: id
                     nullable: false
               - column:
-                  name: interest_rate
-                  type: integer
-                  constraints:
-                    nullable: false
-              - column:
                   name: status
-                  type: varchar(50)
+                  type: varchar(16)
                   constraints:
                     nullable: false
               - column:
-                  name: limit
-                  type: BIGINT
+                  name: interest_rate
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: debt
+                  type: bigint
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
-                  type: varchar(50)
+                  type: timestamp
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: varchar(50)
+                  type: timestamp
                   constraints:
                     nullable: false
+        - createIndex:
+            tableName: agreements
+            indexName: agreements_idx_status
+            column:
+              name: status
+        - createIndex:
+            tableName: agreements
+            indexName: agreements_idx_created_at
+            column:
+              name: created_at

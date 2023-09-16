@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-products
+      id: 20230916-04-products
       author: marshal
       changes:
         - createTable:
@@ -8,48 +8,53 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: manager_id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    foreignKeyName: products_manager_id_fkey
-                    referencedTableName: managers
-                    referencedColumnNames: id
-                    nullable: false
-              - column:
                   name: name
-                  type: varchar(50)
+                  type: varchar(128)
                   constraints:
                     nullable: false
               - column:
                   name: status
-                  type: varchar(50)
+                  type: varchar(16)
                   constraints:
                     nullable: false
               - column:
                   name: currency_code
-                  type: integer
+                  type: int
                   constraints:
                     nullable: false
               - column:
-                  name: interest_rate
-                  type: integer
+                  name: min_interest_rate
+                  type: int
+                  constraints:
+                    nullable: false
               - column:
-                  name: limit
-                  type: BIGINT
+                  name: max_offer_limit
+                  type: bigint
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
-                  type: varchar(50)
+                  type: timestamp
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: varchar(50)
+                  type: timestamp
                   constraints:
                     nullable: false
+        - createIndex:
+            tableName: products
+            indexName: products_idx_status
+            column:
+              name: status
+        - createIndex:
+            tableName: products
+            indexName: products_idx_created_at
+            column:
+              name: created_at

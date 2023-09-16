@@ -3,9 +3,10 @@ package de.marshal.bankapp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -19,9 +20,6 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "manager_id")
-    private Long managerId;
-
     @Column(name = "name")
     private String name;
 
@@ -32,18 +30,15 @@ public class Product {
     @Column(name = "currency_code")
     private int currencyCode;
 
-    @Column(name = "interest_rate")
-    private int interestRate;
+    @Column(name = "min_interest_rate")
+    private int min_interest_rate;
 
-    @Column(name = "limit")
-    private long limit;
+    @Column(name = "max_offer_limit")
+    private long max_offer_limit;
 
     @Column(name = "created_at")
-    private ZonedDateTime createdAt;
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
-    private ZonedDateTime updatedAt;
-
-    public Product() {
-    }
+    private Timestamp updatedAt;
 }

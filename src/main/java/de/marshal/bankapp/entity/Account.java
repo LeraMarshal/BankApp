@@ -3,9 +3,10 @@ package de.marshal.bankapp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -25,10 +26,6 @@ public class Account {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    private AccountType type;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
@@ -40,11 +37,8 @@ public class Account {
     private int currencyCode;
 
     @Column(name = "created_at")
-    private ZonedDateTime createdAt;
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
-    private ZonedDateTime updatedAt;
-
-    public Account() {
-    }
+    private Timestamp updatedAt;
 }

@@ -1,3 +1,20 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  liquibase:
+    enabled: true
+    contexts: test
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+
+  jpa:
+    open-in-view: false
+
+---
+
 server:
   shutdown: graceful
   servlet:
@@ -7,6 +24,10 @@ server:
       enabled: true
 
 spring:
+  config:
+    activate:
+      on-profile: default
+
   main:
     banner-mode: off
 
@@ -15,19 +36,19 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/bankapp
-    username: postgres
-    password: admin
+    # https://www.baeldung.com/spring-boot-properties-env-variables
+    url: "${JDBC_URL}"
+    username: "${JDBC_USERNAME}"
+    password: "${JDBC_PASSWORD}"
 
     hikari:
-      pool-name: SpringBootJPAHikariCP
+      pool-name: BankApp
       register-mbeans: true
       minimum-idle: 5
       maximum-pool-size: 20
       connection-timeout: 30000
       max-lifetime: 2000000
       idle-timeout: 30000
-
   jpa:
 #    generate-ddl: false
 #    hibernate:

@@ -3,9 +3,10 @@ package de.marshal.bankapp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -25,9 +26,9 @@ public class Transaction {
     @Column(name = "credit_account_id")
     private Long creditAccountId;
 
-    @Column(name = "type")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private TransactionType type;
+    private TransactionStatus status;
 
     @Column(name = "amount")
     private Long amount;
@@ -36,8 +37,8 @@ public class Transaction {
     private String description;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Timestamp createdAt;
 
-    public Transaction() {
-    }
+    @Column(name = "updated_at")
+    private Timestamp updated_at;
 }

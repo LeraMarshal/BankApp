@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-clients
+      id: 20230916-01-clients
       author: marshal
       changes:
         - createTable:
@@ -8,63 +8,73 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: manager_id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    foreignKeyName: clients_manager_id_fkey
-                    referencedTableName: managers
-                    referencedColumnNames: id
-                    nullable: false
-              - column:
                   name: status
-                  type: varchar(50)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: tax_code
-                  type: BIGINT
+                  type: varchar(16)
                   constraints:
                     nullable: false
               - column:
                   name: first_name
-                  type: varchar(50)
+                  type: varchar(64)
                   constraints:
                     nullable: false
               - column:
                   name: last_name
-                  type: varchar(50)
+                  type: varchar(64)
                   constraints:
                     nullable: false
               - column:
                   name: email
-                  type: varchar(50)
+                  type: varchar(128)
                   constraints:
                     unique: true
                     nullable: false
               - column:
+                  name: password
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
                   name: address
-                  type: varchar(50)
+                  type: varchar(128)
                   constraints:
                     nullable: false
               - column:
                   name: phone
-                  type: varchar(50)
+                  type: varchar(16)
                   constraints:
+                    unique: true
                     nullable: false
               - column:
                   name: created_at
-                  type: varchar(50)
+                  type: timestamp
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: varchar(50)
+                  type: timestamp
                   constraints:
                     nullable: false
+        - createIndex:
+            tableName: clients
+            indexName: clients_idx_name
+            columns:
+              - column:
+                  name: first_name
+              - column:
+                  name: last_name
+        - createIndex:
+            tableName: clients
+            indexName: clients_idx_status
+            column:
+              name: status
+        - createIndex:
+            tableName: clients
+            indexName: clients_idx_created_at
+            column:
+              name: created_at

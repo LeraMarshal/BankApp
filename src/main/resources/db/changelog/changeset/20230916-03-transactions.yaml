@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20230916-03-transactions
+      author: marshal
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: debit_account_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: transactions_fk_debit_account_id
+                    referencedTableName: accounts
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: credit_account_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: transactions_fk_credit_account_id
+                    referencedTableName: accounts
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: transactions
+            indexName: transactions_idx_status
+            column:
+              name: status
+        - createIndex:
+            tableName: transactions
+            indexName: transactions_idx_created_at
+            column:
+              name: created_at

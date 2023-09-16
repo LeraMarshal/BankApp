@@ -1,0 +1,59 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table accounts {
+  id bigint [primary key]
+  client_id bigint [ref: > clients.id] // ManyToOne
+  name varchar(128)
+  status varchar(16)
+  balance bigint
+  currency_code integer [note: 'код валюты']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table clients {
+  id bigint [primary key]
+  status varchar(16)
+  first_name varchar(64)
+  last_name varchar(64)
+  email varchar(128)
+  password varchar(128)
+  address varchar(128)
+  phone varchar(16)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table products {
+  id bigint [primary key]
+  name varchar(128)
+  status varchar(16)
+  currency_code integer
+  min_interest_rate integer [note: 'min процентная ставка']
+  max_offer_limit bigint [note: 'max сумма предложения']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table agreements {
+  id bigint [primary key]
+  account_id bigint [ref: > accounts.id] // ManyToOne
+  product_id bigint [ref: > products.id] // ManyToOne
+  status varchar(16)
+  interest_rate integer [note: 'процентная ставка']
+  debt bigint [note: 'задолженность']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table transactions {
+  id bigint [primary key]
+  debit_account_id bigint [note: 'счет списания', ref: > accounts.id] // ManyToOne
+  credit_account_id bigint [note: 'счет зачисления', ref: > accounts.id] // ManyToOne
+  status varchar(16)
+  amount bigint [note: 'сумма транзакции']
+  description varchar(255) [note: 'назначение платежа']
+  created_at timestamp
+  updated_at timestamp
+}
