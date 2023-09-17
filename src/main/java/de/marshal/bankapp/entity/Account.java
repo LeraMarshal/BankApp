@@ -2,10 +2,13 @@ package de.marshal.bankapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GeneratedColumn;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -20,25 +23,40 @@ public class Account {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "client_id")
-    private Long clientId;
+    @JoinColumn(name = "client_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @NonNull
+    private Client client;
 
     @Column(name = "name")
+    @NonNull
     private String name;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @NonNull
     private AccountStatus status;
 
     @Column(name = "balance")
-    private long balance;
+    @NonNull
+    private Long balance;
 
     @Column(name = "currency_code")
-    private int currencyCode;
+    @NonNull
+    private Integer currencyCode;
 
-    @Column(name = "created_at")
+    @GeneratedColumn("created_at")
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
+    @GeneratedColumn("updated_at")
     private Timestamp updatedAt;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+    private List<Agreement> agreements;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "debitAccount")
+    private List<Transaction> debitTransactions;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creditAccount")
+    private List<Transaction> creditTransactions;
 }

@@ -13,7 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 // https://spring.io/blog/2023/06/23/improved-testcontainers-support-in-spring-boot-3-1
 public class AppDev {
     public static void main(String[] args) {
-//        System.setProperty("spring.profiles.active", "test");
+        System.setProperty("spring.profiles.active", "test");
 
         SpringApplication.from(App::main)
                 .with(ContainersConfiguration.class)

@@ -1,6 +1,5 @@
 package de.marshal.bankapp;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ActiveProfiles;
@@ -12,13 +11,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @ActiveProfiles("test")
 @Testcontainers
-class AppTests {
+public class AppTests {
     @Container // запускает контейнер
     @ServiceConnection // выставляет свойства datasource
     // https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16.0");
-
-    @Test
-    void contextLoads() {
-    }
 }

@@ -2,7 +2,7 @@
 --changeset marshal:20230916-07-test-data contextFilter:@test
 INSERT INTO clients(id, status, first_name, last_name, email, password, address, phone)
 VALUES (
-           1,
+           nextval('clients_id_seq'),
            'ACTIVE',
            'John',
            'Smith',
@@ -12,7 +12,7 @@ VALUES (
            '493048898888'
        ),
        (
-           2,
+           nextval('clients_id_seq'),
            'ACTIVE',
            'Jack',
            'Shepard',
@@ -23,5 +23,17 @@ VALUES (
        );
 
 INSERT INTO accounts(id, client_id, name, status, balance, currency_code)
-VALUES (1, 1, 'debit', 'ACTIVE', 150000, 978),
-       (2, 2, 'credit', 'ACTIVE', 200000, 978);
+VALUES (nextval('accounts_id_seq'), 1, 'debit', 'ACTIVE', 150000, 978),
+       (nextval('accounts_id_seq'), 2, 'credit', 'ACTIVE', 200000, 978);
+
+INSERT INTO products(id, name, status, currency_code, min_interest_rate, max_offer_limit)
+VALUES (nextval('products_id_seq'), 'Deposit', 'ACTIVE', 978, -5, 0),
+       (nextval('products_id_seq'), 'Credit', 'ACTIVE', 978, 10, 1000000);
+
+INSERT INTO agreements(id, account_id, product_id, status, interest_rate, debt)
+VALUES (nextval('agreements_id_seq'), 1, 1, 'ACTIVE', -5, 0),
+       (nextval('agreements_id_seq'), 2, 2, 'ACTIVE', 13, 1000000);
+
+INSERT INTO transactions(id, debit_account_id, credit_account_id, status, amount, description)
+VALUES (nextval('transactions_id_seq'), 1, 2, 'COMPLETED', 50000, 'lend'),
+       (nextval('transactions_id_seq'), 2, 1, 'COMPLETED', 50000, 'repayment');
