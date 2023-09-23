@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>de.marshal</groupId>
-    <artifactId>BankApp</artifactId>
+    <artifactId>bankapp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>BankApp</name>
     <description>BankApp</description>
@@ -105,6 +105,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>de.marshal/${project.artifactId}:${project.version}</name>
+                    </image>
+                </configuration>
             </plugin>
         </plugins>
     </build>

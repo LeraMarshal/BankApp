@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  app:
+    image: 'de.marshal/bankapp:0.0.1-SNAPSHOT'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - JDBC_URL=jdbc:postgresql://db:5432/bankapp
+      - JDBC_USERNAME=postgres
+      - JDBC_PASSWORD=admin
+    ports:
+      - "8080:8080"
+
+  db:
+    image: 'postgres:16.0'
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=bankapp
+    ports:
+      - "5432:5432"
