@@ -2,9 +2,9 @@ package de.marshal.bankapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GeneratedColumn;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -45,9 +45,19 @@ public class Agreement {
     @NonNull
     private Long debt;
 
-    @GeneratedColumn("created_at")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @GeneratedColumn("updated_at")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = Timestamp.from(Instant.now());
+    }
 }

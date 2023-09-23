@@ -24,6 +24,7 @@ public class AppDev {
     static class ContainersConfiguration {
         @Bean
         @ServiceConnection
+        @SuppressWarnings("resource") // отключение предупреждения try-with-resources
         PostgreSQLContainer<?> postgreSQLContainer() {
             return new PostgreSQLContainer<>("postgres:16.0")
                     .withUsername("postgres")

@@ -2,9 +2,9 @@ package de.marshal.bankapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GeneratedColumn;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @AllArgsConstructor
@@ -44,12 +44,22 @@ public class Product {
     @NonNull
     private Long maxOfferLimit;
 
-    @GeneratedColumn("created_at")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @GeneratedColumn("updated_at")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     private List<Agreement> agreements;
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = Timestamp.from(Instant.now());
+    }
 }

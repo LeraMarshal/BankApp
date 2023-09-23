@@ -49,18 +49,22 @@ databaseChangeLog:
                   type: timestamp
                   constraints:
                     nullable: false
+                  defaultValueDate: ${now}
               - column:
                   name: updated_at
                   type: timestamp
                   constraints:
                     nullable: false
+                  defaultValueDate: ${now}
         - createIndex:
             tableName: agreements
             indexName: agreements_idx_status
-            column:
-              name: status
+            columns:
+              - column:
+                  name: status
         - createIndex:
             tableName: agreements
             indexName: agreements_idx_created_at
-            column:
-              name: created_at
+            columns:
+              - column:
+                  name: created_at

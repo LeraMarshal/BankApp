@@ -43,18 +43,22 @@ databaseChangeLog:
                   type: timestamp
                   constraints:
                     nullable: false
+                  defaultValueDate: ${now}
               - column:
                   name: updated_at
                   type: timestamp
                   constraints:
                     nullable: false
+                  defaultValueDate: ${now}
         - createIndex:
             tableName: products
             indexName: products_idx_status
-            column:
-              name: status
+            columns:
+              - column:
+                  name: status
         - createIndex:
             tableName: products
             indexName: products_idx_created_at
-            column:
-              name: created_at
+            columns:
+              - column:
+                  name: created_at

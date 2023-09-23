@@ -1,4 +1,22 @@
 databaseChangeLog:
+  # https://stackoverflow.com/questions/23550232/liquibase-how-to-set-the-default-value-of-a-date-column-to-be-now-in-utc-form
+  - property:
+      name: now
+      dbms: mysql,h2
+      value: now()
+  - property:
+      name: now
+      dbms: postgresql
+      value: current_timestamp
+  - property:
+      name: now
+      dbms: oracle
+      value: sysdate
+  - property:
+      name: now
+      dbms: mssql
+      value: getdate()
+
   - include:
       file: db/changelog/changeset/20230916-01-clients.yaml
   - include:
@@ -10,6 +28,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/20230916-05-agreements.yaml
   - include:
-      file: db/changelog/changeset/20230916-06-triggers-pgsql.sql
-  - include:
-      file: db/changelog/changeset/20230916-07-test-data.sql
+      file: db/changelog/changeset/20230916-06-test-data.sql

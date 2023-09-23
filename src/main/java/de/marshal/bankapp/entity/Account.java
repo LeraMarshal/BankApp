@@ -2,9 +2,9 @@ package de.marshal.bankapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GeneratedColumn;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @AllArgsConstructor
@@ -45,10 +45,10 @@ public class Account {
     @NonNull
     private Integer currencyCode;
 
-    @GeneratedColumn("created_at")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @GeneratedColumn("updated_at")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
@@ -59,4 +59,14 @@ public class Account {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "creditAccount")
     private List<Transaction> creditTransactions;
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = Timestamp.from(Instant.now());
+    }
 }
