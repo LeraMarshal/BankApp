@@ -1,6 +1,6 @@
 package de.marshal.bankapp.repository;
 
-import de.marshal.bankapp.AppTests;
+import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.entity.Client;
 import de.marshal.bankapp.entity.ClientStatus;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @DirtiesContext // пересоздать контекст после завершения тестов в классе
-public class ClientRepositoryTest extends AppTests {
+public class ClientRepositoryITest extends AppITests {
     @Autowired
     private ClientRepository clientRepository;
 
@@ -47,6 +47,12 @@ public class ClientRepositoryTest extends AppTests {
     void findByEmailTest() {
         Assertions.assertNotEquals(Optional.empty(), clientRepository.findByEmail("john.smith@gmail.com"));
         Assertions.assertEquals(Optional.empty(), clientRepository.findByEmail("abc"));
+    }
+
+    @Test
+    void findByPhoneTest() {
+        Assertions.assertNotEquals(Optional.empty(), clientRepository.findByPhone("493048898888"));
+        Assertions.assertEquals(Optional.empty(), clientRepository.findByPhone("abc"));
     }
 
     @Test

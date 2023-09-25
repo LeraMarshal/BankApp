@@ -11,7 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @ActiveProfiles("test")
 @Testcontainers
-public class AppTests {
+public class AppITests {
     @Container // запускает контейнер
     @ServiceConnection // выставляет свойства datasource
     // https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/

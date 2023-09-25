@@ -1,6 +1,6 @@
 package de.marshal.bankapp.repository;
 
-import de.marshal.bankapp.AppTests;
+import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.entity.Transaction;
 import de.marshal.bankapp.entity.TransactionStatus;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @DirtiesContext
-public class TransactionRepositoryTest extends AppTests {
+public class TransactionRepositoryITest extends AppITests {
 
     @Autowired
     TransactionRepository transactionRepository;

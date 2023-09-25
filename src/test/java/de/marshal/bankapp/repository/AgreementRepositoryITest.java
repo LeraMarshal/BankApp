@@ -1,6 +1,6 @@
 package de.marshal.bankapp.repository;
 
-import de.marshal.bankapp.AppTests;
+import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.entity.Agreement;
 import de.marshal.bankapp.entity.AgreementStatus;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @DirtiesContext // пересоздать контекст после завершения тестов в классе
-public class AgreementRepositoryTest extends AppTests {
+public class AgreementRepositoryITest extends AppITests {
     @Autowired
     AgreementRepository agreementRepository;
 

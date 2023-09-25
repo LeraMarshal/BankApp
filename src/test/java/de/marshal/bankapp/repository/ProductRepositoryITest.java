@@ -1,6 +1,6 @@
 package de.marshal.bankapp.repository;
 
-import de.marshal.bankapp.AppTests;
+import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.entity.Product;
 import de.marshal.bankapp.entity.ProductStatus;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @DirtiesContext // пересоздать контекст после завершения тестов в классе
-public class ProductRepositoryTest extends AppTests {
+public class ProductRepositoryITest extends AppITests {
     @Autowired
     ProductRepository productRepository;
 
