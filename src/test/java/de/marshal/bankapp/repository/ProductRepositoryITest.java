@@ -18,7 +18,7 @@ public class ProductRepositoryITest extends AppITests {
 
     @Test
     void countTest() {
-        Assertions.assertEquals(2, productRepository.count());
+        Assertions.assertEquals(3, productRepository.count());
     }
 
     @Test
@@ -35,7 +35,7 @@ public class ProductRepositoryITest extends AppITests {
 
         productRepository.save(product);
 
-        Assertions.assertEquals(3, productRepository.count());
+        Assertions.assertEquals(4, productRepository.count());
         Assertions.assertEquals(3, product.getId());
         Assertions.assertNotNull(product.getCreatedAt());
         Assertions.assertNotNull(product.getUpdatedAt());
@@ -44,7 +44,7 @@ public class ProductRepositoryITest extends AppITests {
     @Test
     void findByIdTest() {
         Assertions.assertNotEquals(Optional.empty(), productRepository.findById(1L));
-        Assertions.assertEquals(Optional.empty(), productRepository.findById(0L));
+        Assertions.assertEquals(Optional.empty(), productRepository.findById(999L));
     }
 
     @Test

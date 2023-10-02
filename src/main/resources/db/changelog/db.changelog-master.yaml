@@ -28,4 +28,6 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/20230916-05-agreements.yaml
   - include:
+      file: db/changelog/changeset/20231001-01-prod-data.sql
+  - include:
       file: db/changelog/changeset/20230916-06-test-data.sql

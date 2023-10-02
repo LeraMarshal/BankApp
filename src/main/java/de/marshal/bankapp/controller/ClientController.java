@@ -1,29 +1,25 @@
 package de.marshal.bankapp.controller;
 
 import de.marshal.bankapp.dto.ClientDTO;
+import de.marshal.bankapp.dto.ClientWithAccountsDTO;
+import de.marshal.bankapp.dto.RegisterClientDTO;
 import de.marshal.bankapp.entity.Client;
 import de.marshal.bankapp.mapper.ClientMapper;
 import de.marshal.bankapp.service.ClientService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 public class ClientController {
-    private ClientService clientService;
-    private ClientMapper clientMapper;
+    private final ClientService clientService;
+    private final ClientMapper clientMapper;
 
-    @Autowired
-    public ClientController(ClientService clientService, ClientMapper clientMapper) {
-        this.clientService = clientService;
-        this.clientMapper = clientMapper;
-    }
-
-    @GetMapping("/client/search")
+    @GetMapping("/client")
     public ResponseEntity<ClientDTO> search(
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email
@@ -44,6 +40,28 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(clientMapper.toDTO(client));
+        return ResponseEntity.ok(clientMapper.clientToClientDTO(client));
+    }
+
+    @GetMapping("/client/{id}")
+    @Transactional
+    public ResponseEntity<ClientWithAccountsDTO> getById(@PathVariable long id) {
+        Client client = clientService.getClientById(id);
+
+        if (client == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(clientMapper.clientToClientWithAccountsDTO(client));
+    }
+
+    @PutMapping("/client")
+    @Transactional
+    public ResponseEntity<ClientWithAccountsDTO> register(@RequestBody RegisterClientDTO registerClientDTO) {
+        Client client = clientMapper.registerClientDTOToClient(registerClientDTO);
+
+        clientService.register(client);
+
+        return ResponseEntity.ok(clientMapper.clientToClientWithAccountsDTO(client));
     }
 }

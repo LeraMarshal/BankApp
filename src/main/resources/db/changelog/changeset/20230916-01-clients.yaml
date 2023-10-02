@@ -35,11 +35,6 @@ databaseChangeLog:
                     unique: true
                     nullable: false
               - column:
-                  name: password
-                  type: varchar(128)
-                  constraints:
-                    nullable: false
-              - column:
                   name: address
                   type: varchar(128)
                   constraints:

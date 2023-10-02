@@ -1,12 +1,11 @@
 --liquibase formatted sql
 --changeset marshal:20230916-06-test-data contextFilter:@test
-INSERT INTO clients(status, first_name, last_name, email, password, address, phone)
+INSERT INTO clients(status, first_name, last_name, email, address, phone)
 VALUES (
            'ACTIVE',
            'John',
            'Smith',
            'john.smith@gmail.com',
-           '43cc355820abaf58b3442d9a22dc71530f6f6122b29c7d58680a1b1e43c8e672',
            'Berlin, Harden str. 4',
            '493048898888'
        ),
@@ -15,7 +14,6 @@ VALUES (
            'Jack',
            'Shepard',
            'jack.shepard@gmail.com',
-           '43cc355820abaf58b3442d9a22dc71530f6f6122b29c7d58680a1b1e43c8e672',
            'Berlin, Harden str. 5',
            '493048898889'
        );

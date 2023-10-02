@@ -30,7 +30,6 @@ public class ClientRepositoryITest extends AppITests {
                 "Name1",
                 "LName1",
                 "email1",
-                "Pass1",
                 "Address1",
                 "000"
         );
@@ -41,6 +40,12 @@ public class ClientRepositoryITest extends AppITests {
         Assertions.assertEquals(3, client.getId());
         Assertions.assertNotNull(client.getCreatedAt());
         Assertions.assertNotNull(client.getUpdatedAt());
+    }
+
+    @Test
+    void findByIdTest() {
+        Assertions.assertNotEquals(Optional.empty(), clientRepository.findById(1L));
+        Assertions.assertEquals(Optional.empty(), clientRepository.findById(0L));
     }
 
     @Test

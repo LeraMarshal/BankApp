@@ -51,7 +51,7 @@ public class Account {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = {CascadeType.PERSIST})
     private List<Agreement> agreements;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "debitAccount")

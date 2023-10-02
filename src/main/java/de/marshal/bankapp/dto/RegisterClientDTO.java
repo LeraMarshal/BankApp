@@ -1,14 +1,13 @@
 package de.marshal.bankapp.dto;
 
-import de.marshal.bankapp.entity.ClientStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientDTO {
-    private Long id;
-    private ClientStatus status;
+public class RegisterClientDTO {
     private String firstName;
     private String lastName;
     private String email;

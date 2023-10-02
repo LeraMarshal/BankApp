@@ -10,6 +10,7 @@ public interface ClientRepository extends Repository<Client, Long> {
 
     void save(Client client);
 
+    Optional<Client> findById(long id);
     Optional<Client> findByEmail(String email);
     Optional<Client> findByPhone(String phone);
 }

@@ -40,10 +40,6 @@ public class Client {
     @NonNull
     private String email;
 
-    @Column(name = "password")
-    @NonNull
-    private String password;
-
     @Column(name = "address")
     @NonNull
     private String address;
@@ -58,7 +54,7 @@ public class Client {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = {CascadeType.PERSIST})
     private List<Account> accounts;
 
     @PrePersist
