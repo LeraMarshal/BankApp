@@ -52,12 +52,18 @@ public class Account {
     private Timestamp updatedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = {CascadeType.PERSIST})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Agreement> agreements;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "debitAccount")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Transaction> debitTransactions;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "creditAccount")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Transaction> creditTransactions;
 
     @PrePersist

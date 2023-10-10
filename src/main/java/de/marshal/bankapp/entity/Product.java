@@ -51,6 +51,8 @@ public class Product {
     private Timestamp updatedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Agreement> agreements;
 
     @PrePersist
