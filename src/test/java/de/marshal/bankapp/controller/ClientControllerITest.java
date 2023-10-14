@@ -5,12 +5,15 @@ import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.dto.AccountDTO;
 import de.marshal.bankapp.dto.ClientDTO;
 import de.marshal.bankapp.dto.ClientWithAccountsDTO;
+import de.marshal.bankapp.dto.RegisterClientDTO;
 import de.marshal.bankapp.entity.AccountStatus;
 import de.marshal.bankapp.entity.ClientStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -69,8 +72,39 @@ public class ClientControllerITest extends AppITests {
         Assertions.assertEquals(404, mvcResult.getResponse().getStatus());
     }
 
+    @Test
+    public void registerReturnsCorrectClientTest() throws Exception {
+        MvcResult mvcResult = doPut("/client", new RegisterClientDTO(
+                "Vasilii",
+                "Rio",
+                "vasiario@gmail.com",
+                "Germany, Berlin",
+                "49100100100"
+        ));
+
+        Assertions.assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
+
+        ClientWithAccountsDTO client = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                ClientWithAccountsDTO.class
+        );
+
+        Assertions.assertEquals(3, client.getId());
+        Assertions.assertEquals(1, client.getAccounts().size());
+        Assertions.assertEquals(3, client.getAccounts().get(0).getId());
+    }
+
     private MvcResult doGet(String url) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.get(url)).andReturn();
+    }
+
+    private MvcResult doPut(String url, Object content) throws Exception {
+        return mockMvc.perform(
+                MockMvcRequestBuilders
+                        .put(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(content))
+        ).andReturn();
     }
 
     private void verifyClient(MvcResult mvcResult) throws Exception {

@@ -8,6 +8,7 @@ import de.marshal.bankapp.mapper.ClientMapper;
 import de.marshal.bankapp.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,8 @@ public class ClientController {
 
         clientService.register(client);
 
-        return ResponseEntity.ok(clientMapper.clientToClientWithAccountsDTO(client));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(clientMapper.clientToClientWithAccountsDTO(client));
     }
 }
