@@ -60,4 +60,12 @@ public class AgreementRepositoryITest extends AppITests {
         Assertions.assertEquals(1, agreement.getProduct().getId());
         Assertions.assertEquals(1, agreement.getAccount().getId());
     }
+
+    @Test
+    @Transactional
+    void findByClientIdTest() {
+        Assertions.assertEquals(1, agreementRepository
+                .findByClientId(1L)
+                .size());
+    }
 }

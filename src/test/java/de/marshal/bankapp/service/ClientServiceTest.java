@@ -29,7 +29,6 @@ public class ClientServiceTest {
 
     private ClientService clientService;
 
-
     @BeforeEach
     public void setup() {
         clientService = new ClientService(clientRepository, productRepository);
@@ -78,7 +77,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void registerTest() {
+    public void registerTest() throws Exception {
         Product defaultProduct = new Product(
                 Constants.DEFAULT_PRODUCT_ID,
                 "default product",
@@ -97,14 +96,11 @@ public class ClientServiceTest {
         Mockito.doNothing().when(clientRepository).save(clientCaptor.capture());
 
         clientService.register(
-                new Client(
-                        ClientStatus.INACTIVE,
-                        "Vasilii",
-                        "Rio",
-                        "vasiario@gmail.com",
-                        "Germany, Berlin",
-                        "49100100100"
-                )
+                "Vasilii",
+                "Rio",
+                "vasiario@gmail.com",
+                "Germany, Berlin",
+                "49100100100"
         );
 
         Client client = clientCaptor.getValue();

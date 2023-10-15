@@ -45,6 +45,7 @@ public class AccountRepositoryITest extends AppITests {
     }
 
     @Test
+    @Transactional
     void findByIdTest() {
         Assertions.assertNotEquals(Optional.empty(), accountRepository.findById(1L));
         Assertions.assertEquals(Optional.empty(), accountRepository.findById(0L));
@@ -80,6 +81,14 @@ public class AccountRepositoryITest extends AppITests {
                 .findById(1L)
                 .orElseThrow()
                 .getCreditTransactions()
+                .size());
+    }
+
+    @Test
+    @Transactional
+    void findByClientIdTest() {
+        Assertions.assertEquals(1, accountRepository
+                .findByClientId(1L)
                 .size());
     }
 }

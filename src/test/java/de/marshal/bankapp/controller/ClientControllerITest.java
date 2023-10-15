@@ -1,34 +1,24 @@
 package de.marshal.bankapp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.marshal.bankapp.AppITests;
-import de.marshal.bankapp.dto.AccountDTO;
-import de.marshal.bankapp.dto.ClientDTO;
-import de.marshal.bankapp.dto.ClientWithAccountsDTO;
-import de.marshal.bankapp.dto.RegisterClientDTO;
+import de.marshal.bankapp.dto.account.AccountDTO;
+import de.marshal.bankapp.dto.client.ClientDTO;
+import de.marshal.bankapp.dto.client.ClientWithAccountsDTO;
+import de.marshal.bankapp.dto.client.RegisterClientDTO;
 import de.marshal.bankapp.entity.AccountStatus;
 import de.marshal.bankapp.entity.ClientStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @DirtiesContext
-@AutoConfigureMockMvc
 public class ClientControllerITest extends AppITests {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    @Autowired
-    MockMvc mockMvc;
-
     @Test
     public void searchByPhoneReturnsCorrectClientTest() throws Exception {
         verifyClient(doGet("/client?phone=493048898888"));
@@ -43,21 +33,21 @@ public class ClientControllerITest extends AppITests {
     public void searchByPhoneEmailReturnsBadRequestTest() throws Exception {
         MvcResult mvcResult = doGet("/client?phone=abc&email=abc");
 
-        Assertions.assertEquals(400, mvcResult.getResponse().getStatus());
+        assertExceptionDTO(HttpStatus.BAD_REQUEST, mvcResult);
     }
 
     @Test
     public void searchByNonExistingPhoneReturnsNotFoundTest() throws Exception {
         MvcResult mvcResult = doGet("/client?phone=490000000000");
 
-        Assertions.assertEquals(404, mvcResult.getResponse().getStatus());
+        assertStatus(HttpStatus.NOT_FOUND, mvcResult);
     }
 
     @Test
     public void searchByNonExistingEmailReturnsNotFoundTest() throws Exception {
         MvcResult mvcResult = doGet("/client?email=not.existing@gmail.com");
 
-        Assertions.assertEquals(404, mvcResult.getResponse().getStatus());
+        assertStatus(HttpStatus.NOT_FOUND, mvcResult);
     }
 
     @Test
@@ -69,7 +59,7 @@ public class ClientControllerITest extends AppITests {
     public void getByNonExistingIdReturnsNotFoundTest() throws Exception {
         MvcResult mvcResult = doGet("/client/0");
 
-        Assertions.assertEquals(404, mvcResult.getResponse().getStatus());
+        assertStatus(HttpStatus.NOT_FOUND, mvcResult);
     }
 
     @Test
@@ -82,39 +72,21 @@ public class ClientControllerITest extends AppITests {
                 "49100100100"
         ));
 
-        Assertions.assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
+        assertStatus(HttpStatus.CREATED, mvcResult);
 
-        ClientWithAccountsDTO client = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(),
-                ClientWithAccountsDTO.class
-        );
+        ClientWithAccountsDTO client = unmarshalJson(mvcResult, ClientWithAccountsDTO.class);
 
-        Assertions.assertEquals(3, client.getId());
-        Assertions.assertEquals(1, client.getAccounts().size());
-        Assertions.assertEquals(3, client.getAccounts().get(0).getId());
-    }
-
-    private MvcResult doGet(String url) throws Exception {
-        return mockMvc.perform(MockMvcRequestBuilders.get(url)).andReturn();
-    }
-
-    private MvcResult doPut(String url, Object content) throws Exception {
-        return mockMvc.perform(
-                MockMvcRequestBuilders
-                        .put(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(content))
-        ).andReturn();
+        assertEquals(3, client.getId());
+        assertEquals(1, client.getAccounts().size());
+        assertEquals(3, client.getAccounts().get(0).getId());
     }
 
     private void verifyClient(MvcResult mvcResult) throws Exception {
-        Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 
-        String response = mvcResult.getResponse().getContentAsString();
+        ClientDTO clientDTO = unmarshalJson(mvcResult, ClientDTO.class);
 
-        ClientDTO clientDTO = objectMapper.readValue(response, ClientDTO.class);
-
-        Assertions.assertEquals(new ClientDTO(
+        assertEquals(new ClientDTO(
                 1L,
                 ClientStatus.ACTIVE,
                 "John",
@@ -126,13 +98,11 @@ public class ClientControllerITest extends AppITests {
     }
 
     private void verifyClientWithAccounts(MvcResult mvcResult) throws Exception {
-        Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 
-        String response = mvcResult.getResponse().getContentAsString();
+        ClientWithAccountsDTO clientWithAccountsDTO = unmarshalJson(mvcResult, ClientWithAccountsDTO.class);
 
-        ClientWithAccountsDTO clientWithAccountsDTO = objectMapper.readValue(response, ClientWithAccountsDTO.class);
-
-        Assertions.assertEquals(new ClientWithAccountsDTO(
+        assertEquals(new ClientWithAccountsDTO(
                 1L,
                 ClientStatus.ACTIVE,
                 "John",

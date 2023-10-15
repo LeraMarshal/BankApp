@@ -1,4 +1,4 @@
-package de.marshal.bankapp.dto;
+package de.marshal.bankapp.dto.account;
 
 import de.marshal.bankapp.entity.AccountStatus;
 import lombok.AllArgsConstructor;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDTO {
-    private Long id;
+    private long id;
     private String name;
     private AccountStatus status;
-    private Long balance;
-    private Integer currencyCode;
+    private long balance;
+    private int currencyCode;
 }

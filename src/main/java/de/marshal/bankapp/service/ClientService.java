@@ -2,6 +2,7 @@ package de.marshal.bankapp.service;
 
 import de.marshal.bankapp.Constants;
 import de.marshal.bankapp.entity.*;
+import de.marshal.bankapp.exception.ProductNotFoundException;
 import de.marshal.bankapp.repository.ClientRepository;
 import de.marshal.bankapp.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,23 @@ public class ClientService {
         return clientRepository.findByPhone(phone).orElse(null);
     }
 
-    public void register(Client client) {
-        Product defaultProduct = productRepository.findById(Constants.DEFAULT_PRODUCT_ID).orElseThrow();
+    public Client register(
+            String firstName,
+            String lastName,
+            String email,
+            String address,
+            String phone
+    ) throws ProductNotFoundException {
+        Product defaultProduct = productRepository.findById(Constants.DEFAULT_PRODUCT_ID).orElseThrow(ProductNotFoundException::new);
+
+        Client client = new Client(
+                ClientStatus.ACTIVE,
+                firstName,
+                lastName,
+                email,
+                address,
+                phone
+        );
 
         Account account = new Account(
                 client,
@@ -48,11 +64,12 @@ public class ClientService {
                 0L
         );
 
-        client.setStatus(ClientStatus.ACTIVE);
-        client.setAccounts(List.of(account));
-
         account.setAgreements(List.of(agreement));
 
+        client.setAccounts(List.of(account));
+
         clientRepository.save(client);
+
+        return client;
     }
 }
