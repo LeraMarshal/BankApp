@@ -1,8 +1,8 @@
 package de.marshal.bankapp.controller;
 
 import de.marshal.bankapp.AppITests;
-import de.marshal.bankapp.dto.ExceptionDTO;
 import de.marshal.bankapp.dto.agreement.AgreementDTO;
+import de.marshal.bankapp.exception.ApplicationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
@@ -28,9 +28,9 @@ public class AgreementControllerITest extends AppITests {
     }
 
     @Test
-    public void searchWithNullClientIdReturnsBadRequestTest() throws Exception {
+    public void searchWithNullClientIdExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/agreement?clientId=");
 
-        assertExceptionDTO(HttpStatus.INTERNAL_SERVER_ERROR, mvcResult);
+        assertExceptionDTO(ApplicationException.UNSPECIFIED, mvcResult);
     }
 }

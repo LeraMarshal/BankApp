@@ -1,6 +1,5 @@
 package de.marshal.bankapp;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.marshal.bankapp.dto.ExceptionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +54,21 @@ public class AppITests {
         assertEquals(status.value(), mvcResult.getResponse().getStatus());
     }
 
-    protected void assertExceptionDTO(HttpStatus status, MvcResult mvcResult) throws Exception {
-        assertStatus(status, mvcResult);
+    protected void assertExceptionDTO(int code, MvcResult mvcResult) throws Exception {
+        HttpStatus expectedStatus;
+
+        if (code == 0) {
+            expectedStatus = HttpStatus.OK;
+        } else if (code < 0) {
+            expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            expectedStatus = HttpStatus.BAD_REQUEST;
+        }
+
+        assertStatus(expectedStatus, mvcResult);
 
         ExceptionDTO exceptionDTO = unmarshalJson(mvcResult, ExceptionDTO.class);
-        assertNotNull(exceptionDTO.getError());
+        assertEquals(code, exceptionDTO.getCode());
     }
 
     protected <T> List<T> unmarshalListJson(MvcResult from, Class<T> clazz) throws Exception {

@@ -31,7 +31,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void findByClientIdTest() {
+    public void findByClientIdTest() throws Exception {
         Mockito.when(accountRepository.findByClientId(1L)).thenReturn(List.of(new Account()));
         Assertions.assertEquals(1, accountService.findByClientId(1L).size());
         Mockito.verify(accountRepository).findByClientId(1L);

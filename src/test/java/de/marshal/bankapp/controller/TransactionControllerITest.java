@@ -3,6 +3,7 @@ package de.marshal.bankapp.controller;
 import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.dto.transaction.CreateTransactionDTO;
 import de.marshal.bankapp.dto.transaction.TransactionDTO;
+import de.marshal.bankapp.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,16 +49,16 @@ public class TransactionControllerITest extends AppITests {
     }
 
     @Test
-    public void createReturnsBadRequestOnInsufficientFundsTest() throws Exception {
+    public void createInsufficientFundsExceptionTest() throws Exception {
         MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(1L, 2L, 1000000L, "test"));
 
-        assertExceptionDTO(HttpStatus.BAD_REQUEST, mvcResult);
+        assertExceptionDTO(ApplicationException.INSUFFICIENT_FUNDS, mvcResult);
     }
 
     @Test
-    public void createReturnsBadRequestOnInvalidAccountTest() throws Exception {
+    public void createNonExistingAccountExceptionTest() throws Exception {
         MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(3L, 2L, 10000L, "test"));
 
-        assertExceptionDTO(HttpStatus.BAD_REQUEST, mvcResult);
+        assertExceptionDTO(ApplicationException.ACCOUNT_NOT_FOUND, mvcResult);
     }
 }

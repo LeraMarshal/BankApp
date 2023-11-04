@@ -4,8 +4,8 @@ import de.marshal.bankapp.dto.client.ClientDTO;
 import de.marshal.bankapp.dto.client.ClientWithAccountsDTO;
 import de.marshal.bankapp.dto.client.RegisterClientDTO;
 import de.marshal.bankapp.entity.Client;
-import de.marshal.bankapp.exception.ClientNotFoundException;
-import de.marshal.bankapp.exception.ProductNotFoundException;
+import de.marshal.bankapp.exception.ApplicationException;
+import de.marshal.bankapp.exception.IllegalSearchParamsException;
 import de.marshal.bankapp.mapper.ClientMapper;
 import de.marshal.bankapp.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestController
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
+@RestController
 @RequestMapping("/client")
 public class ClientController {
     private final ClientService clientService;
@@ -28,21 +28,15 @@ public class ClientController {
     public ResponseEntity<ClientDTO> search(
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email
-    ) {
-        log.debug("Phone: {}, Email: {}", phone, email);
-
+    ) throws ApplicationException {
         Client client;
 
         if ((phone != null && email != null) || (phone == null && email == null)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot search by both email and phone", null);
+            throw new IllegalSearchParamsException("unable to search by both phone and email");
         } else if (phone != null) {
             client = clientService.getClientByPhone(phone);
         } else {
             client = clientService.getClientByEmail(email);
-        }
-
-        if (client == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, null, new ClientNotFoundException());
         }
 
         return ResponseEntity.ok(clientMapper.clientToClientDTO(client));
@@ -50,31 +44,28 @@ public class ClientController {
 
     @GetMapping("/{id}")
     @Transactional
-    public ResponseEntity<ClientWithAccountsDTO> getById(@PathVariable long id) {
+    public ResponseEntity<ClientWithAccountsDTO> getById(
+            @PathVariable long id
+    ) throws ApplicationException {
         Client client = clientService.getClientById(id);
-
-        if (client == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         return ResponseEntity.ok(clientMapper.clientToClientWithAccountsDTO(client));
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<ClientWithAccountsDTO> register(@RequestBody RegisterClientDTO registerClientDTO) {
-        try {
-            Client client = clientService.register(
-                    registerClientDTO.getFirstName(),
-                    registerClientDTO.getLastName(),
-                    registerClientDTO.getEmail(),
-                    registerClientDTO.getAddress(),
-                    registerClientDTO.getPhone()
-            );
+    public ResponseEntity<ClientWithAccountsDTO> register(
+            @RequestBody RegisterClientDTO registerClientDTO
+    ) throws ApplicationException {
+        Client client = clientService.register(
+                registerClientDTO.getFirstName(),
+                registerClientDTO.getLastName(),
+                registerClientDTO.getEmail(),
+                registerClientDTO.getAddress(),
+                registerClientDTO.getPhone()
+        );
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(clientMapper.clientToClientWithAccountsDTO(client));
-        } catch (ProductNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, null, ex);
-        }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(clientMapper.clientToClientWithAccountsDTO(client));
     }
 }

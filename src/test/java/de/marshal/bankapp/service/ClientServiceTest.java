@@ -2,6 +2,7 @@ package de.marshal.bankapp.service;
 
 import de.marshal.bankapp.Constants;
 import de.marshal.bankapp.entity.*;
+import de.marshal.bankapp.exception.ClientNotFoundException;
 import de.marshal.bankapp.repository.AgreementRepository;
 import de.marshal.bankapp.repository.ClientRepository;
 import de.marshal.bankapp.repository.ProductRepository;
@@ -35,44 +36,50 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void getClientByIdTestExists() {
+    public void getClientByIdTestExists() throws Exception {
         Mockito.when(clientRepository.findById(1L)).thenReturn(Optional.of(new Client()));
         Assertions.assertNotNull(clientService.getClientById(1L));
         Mockito.verify(clientRepository).findById(1L);
     }
 
     @Test
-    public void getClientByIdTestNotExists() {
+    public void getClientByIdTestNotExists() throws Exception {
         Mockito.when(clientRepository.findById(0L)).thenReturn(Optional.empty());
-        Assertions.assertNull(clientService.getClientById(0L));
+        Assertions.assertThrows(ClientNotFoundException.class, () -> {
+            clientService.getClientById(0L);
+        });
         Mockito.verify(clientRepository).findById(0L);
     }
 
     @Test
-    public void getClientByEmailTestExists() {
+    public void getClientByEmailTest() throws Exception {
         Mockito.when(clientRepository.findByEmail("abc")).thenReturn(Optional.of(new Client()));
         Assertions.assertNotNull(clientService.getClientByEmail("abc"));
         Mockito.verify(clientRepository).findByEmail("abc");
     }
 
     @Test
-    public void getClientByEmailTestNotExists() {
+    public void getClientByEmailExceptionTest() throws Exception {
         Mockito.when(clientRepository.findByEmail("abc")).thenReturn(Optional.empty());
-        Assertions.assertNull(clientService.getClientByEmail("abc"));
+        Assertions.assertThrows(ClientNotFoundException.class, () -> {
+            clientService.getClientByEmail("abc");
+        });
         Mockito.verify(clientRepository).findByEmail("abc");
     }
 
     @Test
-    public void getClientByPhoneTestExists() {
+    public void getClientByPhoneTest() throws Exception {
         Mockito.when(clientRepository.findByPhone("abc")).thenReturn(Optional.of(new Client()));
         Assertions.assertNotNull(clientService.getClientByPhone("abc"));
         Mockito.verify(clientRepository).findByPhone("abc");
     }
 
     @Test
-    public void getClientByPhoneTestNotExists() {
+    public void getClientByPhoneExceptionTest() throws Exception {
         Mockito.when(clientRepository.findByPhone("abc")).thenReturn(Optional.empty());
-        Assertions.assertNull(clientService.getClientByPhone("abc"));
+        Assertions.assertThrows(ClientNotFoundException.class, () -> {
+            clientService.getClientByPhone("abc");
+        });
         Mockito.verify(clientRepository).findByPhone("abc");
     }
 

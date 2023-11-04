@@ -3,6 +3,7 @@ package de.marshal.bankapp.service;
 import de.marshal.bankapp.entity.Account;
 import de.marshal.bankapp.entity.AccountStatus;
 import de.marshal.bankapp.entity.Client;
+import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.ClientNotFoundException;
 import de.marshal.bankapp.repository.AccountRepository;
 import de.marshal.bankapp.repository.ClientRepository;
@@ -23,8 +24,9 @@ public class AccountService {
         return accountRepository.findByClientId(clientId);
     }
 
-    public Account create(long clientId, String name, int currencyCode) throws ClientNotFoundException {
-        Client client = clientRepository.findById(clientId).orElseThrow(ClientNotFoundException::new);
+    public Account create(long clientId, String name, int currencyCode) throws ApplicationException {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ClientNotFoundException("client with id " + clientId + " not found"));
 
         Account account = new Account(
                 client,

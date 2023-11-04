@@ -4,6 +4,7 @@ import de.marshal.bankapp.entity.Account;
 import de.marshal.bankapp.entity.Transaction;
 import de.marshal.bankapp.entity.TransactionStatus;
 import de.marshal.bankapp.exception.AccountNotFoundException;
+import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.CurrencyCodeMismatchException;
 import de.marshal.bankapp.exception.InsufficientFundsException;
 import de.marshal.bankapp.repository.AccountRepository;
@@ -32,16 +33,24 @@ public class TransactionService {
             long amount,
             String description
     ) throws AccountNotFoundException, InsufficientFundsException, CurrencyCodeMismatchException {
-        Account debitAccount = accountRepository.findById(debitAccountId).orElseThrow(AccountNotFoundException::new);
+        Account debitAccount = accountRepository.findById(debitAccountId)
+                .orElseThrow(() -> new AccountNotFoundException("account with id " + debitAccountId + " not found"));
 
-        if (debitAccount.getBalance() < amount) {
-            throw new InsufficientFundsException();
+        Long debitAccountBalance = debitAccount.getBalance();
+        if (debitAccountBalance < amount) {
+            throw new InsufficientFundsException("unable to withdraw " + amount + " from " + debitAccountBalance + " available");
         }
 
-        Account creditAccount = accountRepository.findById(creditAccountId).orElseThrow(AccountNotFoundException::new);
+        Account creditAccount = accountRepository.findById(creditAccountId)
+                .orElseThrow(() -> new AccountNotFoundException("account with id " + creditAccountId + " not found"));
 
-        if (!Objects.equals(debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode())) {
-            throw new CurrencyCodeMismatchException();
+        Long creditAccountBalance = creditAccount.getBalance();
+
+        Integer debitCurrencyCode = debitAccount.getCurrencyCode();
+        Integer creditCurrencyCode = creditAccount.getCurrencyCode();
+        if (!Objects.equals(debitCurrencyCode, creditCurrencyCode)) {
+            throw new CurrencyCodeMismatchException("debit account currency code " + debitCurrencyCode +
+                    " differs from credit account " + creditCurrencyCode);
         }
 
         Transaction transaction = new Transaction(
@@ -52,8 +61,8 @@ public class TransactionService {
                 description
         );
 
-        debitAccount.setBalance(debitAccount.getBalance() - amount);
-        creditAccount.setBalance(creditAccount.getBalance() + amount);
+        debitAccount.setBalance(debitAccountBalance - amount);
+        creditAccount.setBalance(creditAccountBalance + amount);
 
         transactionRepository.save(transaction);
         accountRepository.save(debitAccount);

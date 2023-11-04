@@ -1,33 +1,28 @@
 package de.marshal.bankapp.advice;
 
 import de.marshal.bankapp.dto.ExceptionDTO;
-import de.marshal.bankapp.interceptor.LoggingInterceptor;
+import de.marshal.bankapp.exception.ApplicationException;
+import de.marshal.bankapp.filter.LoggingFilter;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 @Slf4j
 public class ExceptionHandlerAdvice {
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ExceptionDTO> applicationErrorHandler(HttpServletRequest request, ResponseStatusException ex) {
-        Throwable cause = ex.getCause();
-        String reason = cause == null ? ex.getMessage() : cause.getMessage();
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ExceptionDTO> applicationErrorHandler(HttpServletRequest request, ApplicationException ex) {
+        log.warn("Failed to handle request, id=[{}], exceptionMsg=[{}]", LoggingFilter.getRequestId(request), ex.getMessage());
 
-        log.warn("Failed to handle request, id=[{}], reason=[{}]", request.getAttribute(LoggingInterceptor.REQUEST_ID_ATTRIBUTE), reason);
-
-        return ResponseEntity.status(ex.getStatusCode()).body(new ExceptionDTO(reason));
+        return ExceptionDTO.from(ex);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionDTO> defaultErrorHandler(HttpServletRequest request, Exception ex) {
-        log.error("Failed to handle request, id=[{}]", request.getAttribute(LoggingInterceptor.REQUEST_ID_ATTRIBUTE), ex);
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ExceptionDTO> defaultErrorHandler(HttpServletRequest request, Throwable t) {
+        log.error("Exception caught handling request, id=[{}]", LoggingFilter.getRequestId(request), t);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDTO(ex.getMessage()));
+        return ExceptionDTO.unspecified();
     }
 }

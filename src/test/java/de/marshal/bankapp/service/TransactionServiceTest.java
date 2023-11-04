@@ -5,8 +5,8 @@ import de.marshal.bankapp.entity.AccountStatus;
 import de.marshal.bankapp.entity.Client;
 import de.marshal.bankapp.entity.Transaction;
 import de.marshal.bankapp.exception.AccountNotFoundException;
+import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.CurrencyCodeMismatchException;
-import de.marshal.bankapp.exception.InsufficientFundsException;
 import de.marshal.bankapp.repository.AccountRepository;
 import de.marshal.bankapp.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,7 +88,7 @@ public class TransactionServiceTest {
     public void createInsufficientFundsTest() {
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account1));
 
-        assertThrows(InsufficientFundsException.class, () -> {
+        assertThrows(ApplicationException.class, () -> {
             transactionService.create(1L, 2L, 50000L, "test");
         });
     }

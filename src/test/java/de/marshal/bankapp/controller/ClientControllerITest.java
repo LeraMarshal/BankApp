@@ -7,6 +7,7 @@ import de.marshal.bankapp.dto.client.ClientWithAccountsDTO;
 import de.marshal.bankapp.dto.client.RegisterClientDTO;
 import de.marshal.bankapp.entity.AccountStatus;
 import de.marshal.bankapp.entity.ClientStatus;
+import de.marshal.bankapp.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -30,24 +31,24 @@ public class ClientControllerITest extends AppITests {
     }
 
     @Test
-    public void searchByPhoneEmailReturnsBadRequestTest() throws Exception {
+    public void searchByPhoneEmailExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client?phone=abc&email=abc");
 
-        assertExceptionDTO(HttpStatus.BAD_REQUEST, mvcResult);
+        assertExceptionDTO(ApplicationException.ILLEGAL_SEARCH_PARAMS, mvcResult);
     }
 
     @Test
-    public void searchByNonExistingPhoneReturnsNotFoundTest() throws Exception {
+    public void searchByNonExistingPhoneExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client?phone=490000000000");
 
-        assertStatus(HttpStatus.NOT_FOUND, mvcResult);
+        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
     }
 
     @Test
-    public void searchByNonExistingEmailReturnsNotFoundTest() throws Exception {
+    public void searchByNonExistingEmailExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client?email=not.existing@gmail.com");
 
-        assertStatus(HttpStatus.NOT_FOUND, mvcResult);
+        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
     }
 
     @Test
@@ -56,10 +57,10 @@ public class ClientControllerITest extends AppITests {
     }
 
     @Test
-    public void getByNonExistingIdReturnsNotFoundTest() throws Exception {
+    public void getByNonExistingIdExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client/0");
 
-        assertStatus(HttpStatus.NOT_FOUND, mvcResult);
+        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
     }
 
     @Test
@@ -79,6 +80,19 @@ public class ClientControllerITest extends AppITests {
         assertEquals(3, client.getId());
         assertEquals(1, client.getAccounts().size());
         assertEquals(3, client.getAccounts().get(0).getId());
+    }
+
+    @Test
+    public void registerDuplicateEmailExceptionTest() throws Exception {
+        MvcResult mvcResult = doPut("/client", new RegisterClientDTO(
+                "John",
+                "Smith",
+                "john.smith@gmail.com",
+                "Germany, Berlin",
+                "49100100100"
+        ));
+
+        assertExceptionDTO(ApplicationException.UNSPECIFIED, mvcResult);
     }
 
     private void verifyClient(MvcResult mvcResult) throws Exception {
