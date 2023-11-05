@@ -3,9 +3,14 @@ package de.marshal.bankapp.controller;
 import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.dto.transaction.CreateTransactionDTO;
 import de.marshal.bankapp.dto.transaction.TransactionDTO;
+import de.marshal.bankapp.entity.Transaction;
+import de.marshal.bankapp.entity.TransactionStatus;
 import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.ApplicationExceptionCode;
+import de.marshal.bankapp.repository.TransactionRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
@@ -21,16 +26,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DirtiesContext
 @AutoConfigureMockMvc
 public class TransactionControllerITest extends AppITests {
+    @Autowired
+    TransactionRepository transactionRepository;
+
     @Test
-    public void searchByClientIdTest() throws Exception {
+    public void searchByClientIdFirstPageTest() throws Exception {
         // When
-        MvcResult mvcResult = doGet("/transaction?accountId=1");
+        MvcResult mvcResult = doGet("/transaction?accountId=1&page=0&pageSize=1");
         List<TransactionDTO> transactions = unmarshalListJson(mvcResult, TransactionDTO.class);
 
         // Then
         assertMvcStatus(HttpStatus.OK, mvcResult);
 
-        assertEquals(2, transactions.size());
+        assertEquals(1, transactions.size());
+        assertEquals(2, transactions.get(0).getId());
+    }
+
+    @Test
+    public void searchByClientIdSecondPageTest() throws Exception {
+        // When
+        MvcResult mvcResult = doGet("/transaction?accountId=1&page=1&pageSize=1");
+        List<TransactionDTO> transactions = unmarshalListJson(mvcResult, TransactionDTO.class);
+
+        // Then
+        assertMvcStatus(HttpStatus.OK, mvcResult);
+
+        assertEquals(1, transactions.size());
+        assertEquals(1, transactions.get(0).getId());
     }
 
     @Test

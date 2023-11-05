@@ -11,6 +11,9 @@ import de.marshal.bankapp.repository.TransactionRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +28,9 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
 
-    public List<Transaction> findByAccountId(long accountId) {
-        return transactionRepository.findByAccountId(accountId);
+    public List<Transaction> findByAccountId(long accountId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt", "id"));
+        return transactionRepository.findByAccountId(accountId, pageable);
     }
 
     @Transactional

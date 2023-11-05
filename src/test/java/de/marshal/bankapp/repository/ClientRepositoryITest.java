@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@DirtiesContext // пересоздать контекст после завершения тестов в классе
+@DirtiesContext
 public class ClientRepositoryITest extends AppITests {
     @Autowired
     private ClientRepository clientRepository;
@@ -56,7 +56,6 @@ public class ClientRepositoryITest extends AppITests {
 
     @Test
     @Transactional
-        // чтобы работал Lazy
     void linkedAccountsTest() { // тестируем, что связанные аккаунты достаются из базы
         Assertions.assertEquals(1, clientRepository
                 .findByEmail("john.smith@gmail.com")

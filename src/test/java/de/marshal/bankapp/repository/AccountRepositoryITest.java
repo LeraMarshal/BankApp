@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@DirtiesContext // пересоздать контекст после завершения тестов в классе
+@DirtiesContext
 public class AccountRepositoryITest extends AppITests {
     @Autowired
     AccountRepository accountRepository;

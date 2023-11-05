@@ -1,6 +1,7 @@
 package de.marshal.bankapp.repository;
 
 import de.marshal.bankapp.entity.Transaction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
@@ -27,5 +28,5 @@ public interface TransactionRepository extends Repository<Transaction, Long> {
                     OR creditAccount.id = ?1
                     OR debitAccount.id = ?1
             """)
-    List<Transaction> findByAccountId(Long accountId);
+    List<Transaction> findByAccountId(Long accountId, Pageable pageable);
 }

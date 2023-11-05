@@ -26,9 +26,11 @@ public class TransactionController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<TransactionDTO>> search(
-            @RequestParam long accountId
+            @RequestParam long accountId,
+            @RequestParam int page,
+            @RequestParam int pageSize
     ) {
-        List<Transaction> transactions = transactionService.findByAccountId(accountId);
+        List<Transaction> transactions = transactionService.findByAccountId(accountId, page, pageSize);
 
         return ResponseDTO.ok(transactionMapper.transactionListToTransactionDTOList(transactions));
     }
