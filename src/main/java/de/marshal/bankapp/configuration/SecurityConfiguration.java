@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authz -> authz
                         //Разрешает не аутентифицированным пользователям делать запросы к swagger-ui
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/**").permitAll()
                         // Остальные запросы требуют аутентификации
                         .anyRequest().authenticated()
                 )

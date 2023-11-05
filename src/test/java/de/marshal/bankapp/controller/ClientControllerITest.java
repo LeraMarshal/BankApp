@@ -30,9 +30,6 @@ public class ClientControllerITest extends AppITests {
     @Autowired
     ClientRepository clientRepository;
 
-    @Autowired
-    AccountRepository accountRepository;
-
     @Test
     public void searchByPhoneTest() throws Exception {
         verifyClient(doGet("/client?phone=493048898888"));

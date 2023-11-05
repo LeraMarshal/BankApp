@@ -28,15 +28,6 @@ public class AccountControllerITest extends AppITests {
     @Autowired
     AccountRepository accountRepository;
 
-    @Autowired
-    ClientRepository clientRepository;
-
-    @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
-    BankConfigurationProperties bankConfigurationProperties;
-
     @Test
     public void searchTest() throws Exception {
         // When

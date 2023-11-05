@@ -26,9 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DirtiesContext
 @AutoConfigureMockMvc
 public class TransactionControllerITest extends AppITests {
-    @Autowired
-    TransactionRepository transactionRepository;
-
     @Test
     public void searchByClientIdFirstPageTest() throws Exception {
         // When
