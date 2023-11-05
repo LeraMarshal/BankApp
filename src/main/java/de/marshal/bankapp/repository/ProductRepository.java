@@ -6,8 +6,6 @@ import org.springframework.data.repository.Repository;
 import java.util.Optional;
 
 public interface ProductRepository extends Repository<Product, Long> {
-    long count();
-
     void save(Product product);
 
     Optional<Product> findById(Long Id);

@@ -35,8 +35,17 @@ public class AccountController {
         return ResponseDTO.ok(accountMapper.accountListToAccountDTOList(accounts));
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<AccountDTO> get(
+            @PathVariable long id
+    ) throws ApplicationException {
+        Account account = accountService.getById(id);
+
+        return ResponseDTO.ok(accountMapper.accountToAccountDTO(account));
+    }
+
     @PutMapping
-    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO<AccountDTO> create(
             @RequestBody CreateAccountDTO createAccountDTO
@@ -46,6 +55,16 @@ public class AccountController {
                 createAccountDTO.getName(),
                 createAccountDTO.getCurrencyCode()
         );
+
+        return ResponseDTO.ok(accountMapper.accountToAccountDTO(account));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<AccountDTO> delete(
+            @PathVariable long id
+    ) throws ApplicationException {
+        Account account = accountService.deleteById(id);
 
         return ResponseDTO.ok(accountMapper.accountToAccountDTO(account));
     }

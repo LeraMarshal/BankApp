@@ -6,11 +6,14 @@ import de.marshal.bankapp.entity.TransactionStatus;
 import de.marshal.bankapp.exception.AccountNotFoundException;
 import de.marshal.bankapp.exception.CurrencyCodeMismatchException;
 import de.marshal.bankapp.exception.InsufficientFundsException;
-import de.marshal.bankapp.repository.AccountRepository;
+import de.marshal.bankapp.exception.InvalidStatusException;
 import de.marshal.bankapp.repository.TransactionRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,37 +23,45 @@ import java.util.Objects;
 @Slf4j
 public class TransactionService {
     private final TransactionRepository transactionRepository;
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
     public List<Transaction> findByAccountId(long accountId) {
         return transactionRepository.findByAccountId(accountId);
     }
 
+    @Transactional
     public Transaction create(
             long debitAccountId,
             long creditAccountId,
-            long amount,
-            String description
-    ) throws AccountNotFoundException, InsufficientFundsException, CurrencyCodeMismatchException {
-        Account debitAccount = accountRepository.findById(debitAccountId)
-                .orElseThrow(() -> new AccountNotFoundException("account with id " + debitAccountId + " not found"));
+            @NonNull String description,
+            long amount
+    ) throws AccountNotFoundException, InsufficientFundsException, CurrencyCodeMismatchException, InvalidStatusException {
+        Account debitAccount = accountService.getById(debitAccountId);
+        Account creditAccount = accountService.getById(creditAccountId);
 
-        Long debitAccountBalance = debitAccount.getBalance();
-        if (debitAccountBalance < amount) {
-            throw new InsufficientFundsException("unable to withdraw " + amount + " from " + debitAccountBalance + " available");
-        }
+        return create(debitAccount, creditAccount, description, amount);
+    }
 
-        Account creditAccount = accountRepository.findById(creditAccountId)
-                .orElseThrow(() -> new AccountNotFoundException("account with id " + creditAccountId + " not found"));
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Transaction create(
+            @NonNull Account debitAccount,
+            @NonNull Account creditAccount,
+            @NonNull String description,
+            long amount
+    ) throws InsufficientFundsException, InvalidStatusException, CurrencyCodeMismatchException {
+        int debitCurrencyCode = debitAccount.getCurrencyCode();
+        int creditCurrencyCode = creditAccount.getCurrencyCode();
 
-        Long creditAccountBalance = creditAccount.getBalance();
-
-        Integer debitCurrencyCode = debitAccount.getCurrencyCode();
-        Integer creditCurrencyCode = creditAccount.getCurrencyCode();
         if (!Objects.equals(debitCurrencyCode, creditCurrencyCode)) {
             throw new CurrencyCodeMismatchException("debit account currency code " + debitCurrencyCode +
                     " differs from credit account " + creditCurrencyCode);
         }
+
+        log.info("Creating new transaction, debitAccountId=[{}], creditAccountId=[{}], description=[{}], amount=[{}]",
+                debitAccount.getId(), creditAccount.getId(), description, amount);
+
+        accountService.withdraw(debitAccount, amount);
+        accountService.deposit(creditAccount, amount);
 
         Transaction transaction = new Transaction(
                 debitAccount,
@@ -60,12 +71,7 @@ public class TransactionService {
                 description
         );
 
-        debitAccount.setBalance(debitAccountBalance - amount);
-        creditAccount.setBalance(creditAccountBalance + amount);
-
         transactionRepository.save(transaction);
-        accountRepository.save(debitAccount);
-        accountRepository.save(creditAccount);
 
         return transaction;
     }

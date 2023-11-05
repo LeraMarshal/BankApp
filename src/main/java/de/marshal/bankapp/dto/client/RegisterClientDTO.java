@@ -13,4 +13,6 @@ public class RegisterClientDTO {
     private String email;
     private String address;
     private String phone;
+
+    private int currencyCode;
 }

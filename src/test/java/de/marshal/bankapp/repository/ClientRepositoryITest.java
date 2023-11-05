@@ -17,13 +17,7 @@ public class ClientRepositoryITest extends AppITests {
     private ClientRepository clientRepository;
 
     @Test
-    void countTest() {
-        Assertions.assertEquals(2, clientRepository.count());
-    }
-
-    @Test
     @Transactional
-        // откатывает изменения, сделанные в рамках теста
     void saveTest() {
         Client client = new Client(
                 ClientStatus.ACTIVE,
@@ -36,8 +30,8 @@ public class ClientRepositoryITest extends AppITests {
 
         clientRepository.save(client);
 
-        Assertions.assertEquals(3, clientRepository.count());
-        Assertions.assertEquals(3, client.getId());
+        Assertions.assertEquals(clientRepository.findById(client.getId()).orElse(null), client);
+
         Assertions.assertNotNull(client.getCreatedAt());
         Assertions.assertNotNull(client.getUpdatedAt());
     }

@@ -20,13 +20,7 @@ public class AccountRepositoryITest extends AppITests {
     ClientRepository clientRepository;
 
     @Test
-    void countTest() {
-        Assertions.assertEquals(2, accountRepository.count());
-    }
-
-    @Test
     @Transactional
-        // откатывает изменения, сделанные в рамках теста
     void saveTest() {
         Account account = new Account(
                 clientRepository.findByEmail("john.smith@gmail.com").orElseThrow(),
@@ -38,8 +32,8 @@ public class AccountRepositoryITest extends AppITests {
 
         accountRepository.save(account);
 
-        Assertions.assertEquals(3, accountRepository.count());
-        Assertions.assertEquals(3, account.getId());
+        Assertions.assertEquals(accountRepository.findById(account.getId()).orElse(null), account);
+
         Assertions.assertNotNull(account.getCreatedAt());
         Assertions.assertNotNull(account.getUpdatedAt());
     }

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends Repository<Account, Long> {
-    long count();
-
     void save(Account account);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

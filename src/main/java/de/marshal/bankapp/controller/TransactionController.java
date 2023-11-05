@@ -34,7 +34,6 @@ public class TransactionController {
     }
 
     @PutMapping
-    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO<TransactionDTO> create(
             @RequestBody CreateTransactionDTO createTransactionDTO
@@ -42,8 +41,8 @@ public class TransactionController {
         Transaction transaction = transactionService.create(
                 createTransactionDTO.getDebitAccountId(),
                 createTransactionDTO.getCreditAccountId(),
-                createTransactionDTO.getAmount(),
-                createTransactionDTO.getDescription()
+                createTransactionDTO.getDescription(),
+                createTransactionDTO.getAmount()
         );
 
         return ResponseDTO.ok(transactionMapper.transactionToTransactionDTO(transaction));

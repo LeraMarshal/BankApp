@@ -17,13 +17,7 @@ public class ProductRepositoryITest extends AppITests {
     ProductRepository productRepository;
 
     @Test
-    void countTest() {
-        Assertions.assertEquals(3, productRepository.count());
-    }
-
-    @Test
     @Transactional
-        // откатывает изменения, сделанные в рамках теста
     void saveTest() {
         Product product = new Product(
                 "test product",
@@ -35,8 +29,8 @@ public class ProductRepositoryITest extends AppITests {
 
         productRepository.save(product);
 
-        Assertions.assertEquals(4, productRepository.count());
-        Assertions.assertEquals(3, product.getId());
+        Assertions.assertEquals(productRepository.findById(product.getId()).orElse(null), product);
+
         Assertions.assertNotNull(product.getCreatedAt());
         Assertions.assertNotNull(product.getUpdatedAt());
     }
@@ -49,7 +43,6 @@ public class ProductRepositoryITest extends AppITests {
 
     @Test
     @Transactional
-        // чтобы работал Lazy
     void linkedAgreementsTest() {
         Assertions.assertEquals(1, productRepository
                 .findById(1L)

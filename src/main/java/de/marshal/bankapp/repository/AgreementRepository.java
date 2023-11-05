@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AgreementRepository extends Repository<Agreement, Long> {
-    long count();
-
     void save(Agreement agreement);
 
     Optional<Agreement> findById(Long id);

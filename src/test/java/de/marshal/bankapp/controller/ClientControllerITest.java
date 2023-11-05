@@ -5,14 +5,21 @@ import de.marshal.bankapp.dto.account.AccountDTO;
 import de.marshal.bankapp.dto.client.ClientDTO;
 import de.marshal.bankapp.dto.client.ClientWithAccountsDTO;
 import de.marshal.bankapp.dto.client.RegisterClientDTO;
+import de.marshal.bankapp.entity.Account;
 import de.marshal.bankapp.entity.AccountStatus;
+import de.marshal.bankapp.entity.Client;
 import de.marshal.bankapp.entity.ClientStatus;
 import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.ApplicationExceptionCode;
+import de.marshal.bankapp.repository.AccountRepository;
+import de.marshal.bankapp.repository.ClientRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,13 +27,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DirtiesContext
 public class ClientControllerITest extends AppITests {
+    @Autowired
+    ClientRepository clientRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
+
     @Test
-    public void searchByPhoneReturnsCorrectClientTest() throws Exception {
+    public void searchByPhoneTest() throws Exception {
         verifyClient(doGet("/client?phone=493048898888"));
     }
 
     @Test
-    public void searchByEmailReturnsCorrectClientTest() throws Exception {
+    public void searchByEmailTest() throws Exception {
         verifyClient(doGet("/client?email=john.smith@gmail.com"));
     }
 
@@ -52,8 +65,26 @@ public class ClientControllerITest extends AppITests {
     }
 
     @Test
-    public void getByIdReturnsCorrectClientTest() throws Exception {
-        verifyClientWithAccounts(doGet("/client/1"));
+    public void getByIdTest() throws Exception {
+        MvcResult mvcResult = doGet("/client/1");
+        assertMvcStatus(HttpStatus.OK, mvcResult);
+
+        verifyClientWithAccounts(mvcResult, new ClientWithAccountsDTO(
+                1L,
+                ClientStatus.ACTIVE,
+                "John",
+                "Smith",
+                "john.smith@gmail.com",
+                "Berlin, Harden str. 4",
+                "493048898888",
+                List.of(new AccountDTO(
+                        1L,
+                        "debit",
+                        AccountStatus.ACTIVE,
+                        150000,
+                        978
+                ))
+        ));
     }
 
     @Test
@@ -64,22 +95,69 @@ public class ClientControllerITest extends AppITests {
     }
 
     @Test
-    public void registerReturnsCorrectClientTest() throws Exception {
+    @Transactional
+    public void registerEurTest() throws Exception {
         MvcResult mvcResult = doPut("/client", new RegisterClientDTO(
                 "Vasilii",
                 "Rio",
                 "vasiario@gmail.com",
                 "Germany, Berlin",
-                "49100100100"
+                "49100100100",
+                978
         ));
 
         assertMvcStatus(HttpStatus.CREATED, mvcResult);
 
-        ClientWithAccountsDTO client = unmarshalJson(mvcResult, ClientWithAccountsDTO.class);
+        Client client = clientRepository.findByEmail("vasiario@gmail.com").orElseThrow();
+        verifyClientWithAccounts(mvcResult, new ClientWithAccountsDTO(
+                client.getId(),
+                ClientStatus.ACTIVE,
+                "Vasilii",
+                "Rio",
+                "vasiario@gmail.com",
+                "Germany, Berlin",
+                "49100100100",
+                List.of(new AccountDTO(
+                        client.getAccounts().get(0).getId(),
+                        "DEFAULT PRODUCT EUR",
+                        AccountStatus.ACTIVE,
+                        0,
+                        978
+                ))
+        ));
+    }
 
-        assertEquals(3, client.getId());
-        assertEquals(1, client.getAccounts().size());
-        assertEquals(3, client.getAccounts().get(0).getId());
+    @Test
+    @Transactional
+    public void registerUsdTest() throws Exception {
+        MvcResult mvcResult = doPut("/client", new RegisterClientDTO(
+                "Vasilii",
+                "Rio",
+                "vasiario1@gmail.com",
+                "Germany, Berlin",
+                "49100100101",
+                840
+        ));
+
+        assertMvcStatus(HttpStatus.CREATED, mvcResult);
+
+        Client client = clientRepository.findByEmail("vasiario1@gmail.com").orElseThrow();
+        verifyClientWithAccounts(mvcResult, new ClientWithAccountsDTO(
+                client.getId(),
+                ClientStatus.ACTIVE,
+                "Vasilii",
+                "Rio",
+                "vasiario1@gmail.com",
+                "Germany, Berlin",
+                "49100100101",
+                List.of(new AccountDTO(
+                        client.getAccounts().get(0).getId(),
+                        "DEFAULT PRODUCT USD",
+                        AccountStatus.ACTIVE,
+                        0,
+                        840
+                ))
+        ));
     }
 
     @Test
@@ -89,7 +167,8 @@ public class ClientControllerITest extends AppITests {
                 "Smith",
                 "john.smith@gmail.com",
                 "Germany, Berlin",
-                "49100100100"
+                "49100100100",
+                978
         ));
 
         assertMvcError(ApplicationExceptionCode.UNSPECIFIED, mvcResult);
@@ -111,28 +190,7 @@ public class ClientControllerITest extends AppITests {
         ), clientDTO);
     }
 
-    private void verifyClientWithAccounts(MvcResult mvcResult) throws Exception {
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
-
-        ClientWithAccountsDTO clientWithAccountsDTO = unmarshalJson(mvcResult, ClientWithAccountsDTO.class);
-
-        assertEquals(new ClientWithAccountsDTO(
-                1L,
-                ClientStatus.ACTIVE,
-                "John",
-                "Smith",
-                "john.smith@gmail.com",
-                "Berlin, Harden str. 4",
-                "493048898888",
-                List.of(
-                        new AccountDTO(
-                                1L,
-                                "debit",
-                                AccountStatus.ACTIVE,
-                                150000L,
-                                978
-                        )
-                )
-        ), clientWithAccountsDTO);
+    private void verifyClientWithAccounts(MvcResult mvcResult, ClientWithAccountsDTO clientWithAccountsDTO) throws Exception {
+        assertEquals(clientWithAccountsDTO, unmarshalJson(mvcResult, ClientWithAccountsDTO.class));
     }
 }

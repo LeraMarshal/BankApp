@@ -21,11 +21,6 @@ public class TransactionRepositoryITest extends AppITests {
     AccountRepository accountRepository;
 
     @Test
-    void countTest(){
-        Assertions.assertEquals(2, transactionRepository.count());
-    }
-
-    @Test
     @Transactional
     void saveTest(){
         Transaction transaction = new Transaction(
@@ -38,8 +33,8 @@ public class TransactionRepositoryITest extends AppITests {
 
         transactionRepository.save(transaction);
 
-        Assertions.assertEquals(3, transactionRepository.count());
-        Assertions.assertEquals(3, transaction.getId());
+        Assertions.assertEquals(transactionRepository.findById(transaction.getId()).orElse(null), transaction);
+
         Assertions.assertNotNull(transaction.getCreatedAt());
         Assertions.assertNotNull(transaction.getUpdatedAt());
     }

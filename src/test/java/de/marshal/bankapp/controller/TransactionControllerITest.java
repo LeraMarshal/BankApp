@@ -22,43 +22,105 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureMockMvc
 public class TransactionControllerITest extends AppITests {
     @Test
-    public void searchByClientIdReturnsCorrectAccountsTest() throws Exception {
+    public void searchByClientIdTest() throws Exception {
+        // When
         MvcResult mvcResult = doGet("/transaction?accountId=1");
+        List<TransactionDTO> transactions = unmarshalListJson(mvcResult, TransactionDTO.class);
 
+        // Then
         assertMvcStatus(HttpStatus.OK, mvcResult);
 
-        List<TransactionDTO> transactions = unmarshalListJson(mvcResult, TransactionDTO.class);
         assertEquals(2, transactions.size());
     }
 
     @Test
-    public void createReturnsCorrectTransactionTest() throws Exception {
+    public void createTest() throws Exception {
+        // Given
         Timestamp timestamp = Timestamp.from(Instant.now());
 
+        // When
         MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(1L, 2L, 10000L, "test"));
+        TransactionDTO transaction = unmarshalJson(mvcResult, TransactionDTO.class);
 
+        // Then
         assertMvcStatus(HttpStatus.CREATED, mvcResult);
 
-        TransactionDTO transaction = unmarshalJson(mvcResult, TransactionDTO.class);
         assertEquals(3L, transaction.getId());
         assertEquals(1L, transaction.getDebitAccountId());
         assertEquals(2L, transaction.getCreditAccountId());
         assertEquals(10000L, transaction.getAmount());
         assertEquals("test", transaction.getDescription());
+
         assertTrue(timestamp.before(transaction.getCreatedAt()));
     }
 
     @Test
     public void createInsufficientFundsExceptionTest() throws Exception {
-        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(1L, 2L, 1000000L, "test"));
+        // When
+        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(
+                1L,
+                2L,
+                1000000L,
+                "test"
+        ));
 
+        // Then
         assertMvcError(ApplicationExceptionCode.INSUFFICIENT_FUNDS, mvcResult);
     }
 
     @Test
     public void createNonExistingAccountExceptionTest() throws Exception {
-        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(3L, 2L, 10000L, "test"));
+        // When
+        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(
+                0L,
+                0L,
+                10000L,
+                "test"
+        ));
 
+        // Then
         assertMvcError(ApplicationExceptionCode.ACCOUNT_NOT_FOUND, mvcResult);
+    }
+
+    @Test
+    public void createInvalidDebitAccountStatusExceptionTest() throws Exception {
+        // When
+        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(
+                4L,
+                1L,
+                10000L,
+                "test"
+        ));
+
+        // Then
+        assertMvcError(ApplicationExceptionCode.INVALID_STATUS, mvcResult);
+    }
+
+    @Test
+    public void createInvalidCreditAccountStatusExceptionTest() throws Exception {
+        // When
+        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(
+                1L,
+                4L,
+                10000L,
+                "test"
+        ));
+
+        // Then
+        assertMvcError(ApplicationExceptionCode.INVALID_STATUS, mvcResult);
+    }
+
+    @Test
+    public void createCurrencyCodeMismatchExceptionTest() throws Exception {
+        // When
+        MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(
+                7L,
+                1L,
+                10000L,
+                "test"
+        ));
+
+        // Then
+        assertMvcError(ApplicationExceptionCode.CURRENCY_CODE_MISMATCH, mvcResult);
     }
 }

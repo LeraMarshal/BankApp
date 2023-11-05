@@ -23,13 +23,7 @@ public class AgreementRepositoryITest extends AppITests {
     ProductRepository productRepository;
 
     @Test
-    void countTest() {
-        Assertions.assertEquals(2, agreementRepository.count());
-    }
-
-    @Test
     @Transactional
-        // откатывает изменения, сделанные в рамках теста
     void saveTest() {
         Agreement agreement = new Agreement(
                 accountRepository.findById(1L).orElseThrow(),
@@ -41,8 +35,8 @@ public class AgreementRepositoryITest extends AppITests {
 
         agreementRepository.save(agreement);
 
-        Assertions.assertEquals(3, agreementRepository.count());
-        Assertions.assertEquals(3, agreement.getId());
+        Assertions.assertEquals(agreementRepository.findById(agreement.getId()).orElse(null), agreement);
+
         Assertions.assertNotNull(agreement.getCreatedAt());
         Assertions.assertNotNull(agreement.getUpdatedAt());
     }
@@ -54,7 +48,7 @@ public class AgreementRepositoryITest extends AppITests {
     }
 
     @Test
-    void linkedAccountAndProductTest(){
+    void linkedAccountAndProductTest() {
         Agreement agreement = agreementRepository.findById(1L).orElseThrow();
 
         Assertions.assertEquals(1, agreement.getProduct().getId());

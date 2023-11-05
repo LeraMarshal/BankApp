@@ -54,7 +54,7 @@ public class Client {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = {CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts;

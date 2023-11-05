@@ -8,14 +8,13 @@ import de.marshal.bankapp.entity.Client;
 import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.IllegalSearchParamsException;
 import de.marshal.bankapp.mapper.ClientMapper;
+import de.marshal.bankapp.service.ClientRegistrationService;
 import de.marshal.bankapp.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/client")
 public class ClientController {
     private final ClientService clientService;
+    private final ClientRegistrationService clientRegistrationService;
     private final ClientMapper clientMapper;
 
     @GetMapping
@@ -36,9 +36,9 @@ public class ClientController {
         if ((phone != null && email != null) || (phone == null && email == null)) {
             throw new IllegalSearchParamsException("unable to search by both phone and email");
         } else if (phone != null) {
-            client = clientService.getClientByPhone(phone);
+            client = clientService.getByPhone(phone);
         } else {
-            client = clientService.getClientByEmail(email);
+            client = clientService.getByEmail(email);
         }
 
         return ResponseDTO.ok(clientMapper.clientToClientDTO(client));
@@ -50,7 +50,7 @@ public class ClientController {
     public ResponseDTO<ClientWithAccountsDTO> getById(
             @PathVariable long id
     ) throws ApplicationException {
-        Client client = clientService.getClientById(id);
+        Client client = clientService.getByIdWithAccounts(id);
 
         return ResponseDTO.ok(clientMapper.clientToClientWithAccountsDTO(client));
     }
@@ -61,12 +61,13 @@ public class ClientController {
     public ResponseDTO<ClientWithAccountsDTO> register(
             @RequestBody RegisterClientDTO registerClientDTO
     ) throws ApplicationException {
-        Client client = clientService.register(
+        Client client = clientRegistrationService.register(
                 registerClientDTO.getFirstName(),
                 registerClientDTO.getLastName(),
                 registerClientDTO.getEmail(),
                 registerClientDTO.getAddress(),
-                registerClientDTO.getPhone()
+                registerClientDTO.getPhone(),
+                registerClientDTO.getCurrencyCode()
         );
 
         return ResponseDTO.ok(clientMapper.clientToClientWithAccountsDTO(client));

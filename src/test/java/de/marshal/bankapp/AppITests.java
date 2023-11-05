@@ -42,6 +42,19 @@ public class AppITests {
         return mockMvc.perform(MockMvcRequestBuilders.get(url)).andReturn();
     }
 
+    protected MvcResult doDelete(String url) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.delete(url)).andReturn();
+    }
+
+    protected MvcResult doPost(String url, Object content) throws Exception {
+        return mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(OBJECT_MAPPER.writeValueAsBytes(content))
+        ).andReturn();
+    }
+
     protected MvcResult doPut(String url, Object content) throws Exception {
         return mockMvc.perform(
                 MockMvcRequestBuilders
