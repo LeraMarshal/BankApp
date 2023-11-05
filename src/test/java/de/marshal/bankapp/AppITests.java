@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.marshal.bankapp.dto.ResponseDTO;
 import de.marshal.bankapp.exception.ApplicationExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,6 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class AppITests {
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    @Value("${jwt.test.auth-token}")
+    protected String authToken;
+
     @Container // запускает контейнер
     @ServiceConnection // выставляет свойства datasource
     // https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/
@@ -39,11 +44,19 @@ public class AppITests {
     protected MockMvc mockMvc;
 
     protected MvcResult doGet(String url) throws Exception {
-        return mockMvc.perform(MockMvcRequestBuilders.get(url)).andReturn();
+        return mockMvc.perform(
+                MockMvcRequestBuilders
+                        .get(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken)
+        ).andReturn();
     }
 
     protected MvcResult doDelete(String url) throws Exception {
-        return mockMvc.perform(MockMvcRequestBuilders.delete(url)).andReturn();
+        return mockMvc.perform(
+                MockMvcRequestBuilders
+                        .delete(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken)
+        ).andReturn();
     }
 
     protected MvcResult doPost(String url, Object content) throws Exception {
@@ -51,6 +64,7 @@ public class AppITests {
                 MockMvcRequestBuilders
                         .post(url)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken)
                         .content(OBJECT_MAPPER.writeValueAsBytes(content))
         ).andReturn();
     }
@@ -60,6 +74,7 @@ public class AppITests {
                 MockMvcRequestBuilders
                         .put(url)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken)
                         .content(OBJECT_MAPPER.writeValueAsBytes(content))
         ).andReturn();
     }
@@ -83,7 +98,7 @@ public class AppITests {
         ResponseDTO<List<T>> responseDTO = OBJECT_MAPPER.readValue(
                 from.getResponse().getContentAsString(),
                 OBJECT_MAPPER.getTypeFactory().constructParametricType(ResponseDTO.class,
-                    OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz)
+                        OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz)
                 )
         );
 

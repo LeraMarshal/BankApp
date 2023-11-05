@@ -12,6 +12,7 @@ services:
       - JDBC_URL=jdbc:postgresql://db:5432/bankapp
       - JDBC_USERNAME=postgres
       - JDBC_PASSWORD=admin
+      - JWT_SECRET=ssqUi2G0KTbTx8aqzhVn4p3+xVGhy5vWDhL7m8kpkTmqZRFgh53kmks28STubJm9FmwtDmV0QuEoJ9whZKx6HA==
     ports:
       - "8080:8080"
 

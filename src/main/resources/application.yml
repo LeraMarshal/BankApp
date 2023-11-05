@@ -27,6 +27,11 @@ bank:
     978: -1
     840: -2
 
+jwt:
+  secret: ssqUi2G0KTbTx8aqzhVn4p3+xVGhy5vWDhL7m8kpkTmqZRFgh53kmks28STubJm9FmwtDmV0QuEoJ9whZKx6HA==
+  test:
+    auth-token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJCYW5rIHN1YnN5c3RlbSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.-uDOUYe6kl6UQYsJzgJEoMjydPPj_cJ2H-kXb95JmqFv0pc6Hrrz8laVmCn6gMutUl4cmwxW0JCQpGh3ucoFdA
+
 ---
 
 server:
@@ -86,3 +91,5 @@ bank:
     978: -1
     840: -2
 
+jwt:
+  secret: "${JWT_SECRET}"
