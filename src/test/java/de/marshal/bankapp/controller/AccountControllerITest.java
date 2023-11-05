@@ -4,7 +4,7 @@ import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.dto.account.AccountDTO;
 import de.marshal.bankapp.dto.account.CreateAccountDTO;
 import de.marshal.bankapp.entity.AccountStatus;
-import de.marshal.bankapp.exception.ApplicationException;
+import de.marshal.bankapp.exception.ApplicationExceptionCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class AccountControllerITest extends AppITests {
     public void searchByClientIdReturnsCorrectAccountsTest() throws Exception {
         MvcResult mvcResult = doGet("/account?clientId=1");
 
-        assertStatus(HttpStatus.OK, mvcResult);
+        assertMvcStatus(HttpStatus.OK, mvcResult);
 
         List<AccountDTO> accounts = unmarshalListJson(mvcResult, AccountDTO.class);
         assertEquals(1, accounts.size());
@@ -32,14 +32,14 @@ public class AccountControllerITest extends AppITests {
     public void searchWithNullClientIdExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/account?clientId=");
 
-        assertExceptionDTO(ApplicationException.UNSPECIFIED, mvcResult);
+        assertMvcError(ApplicationExceptionCode.UNSPECIFIED, mvcResult);
     }
 
     @Test
     public void createReturnsCorrectAccountTest() throws Exception {
         MvcResult mvcResult = doPut("/account", new CreateAccountDTO(1L, "test", 978));
 
-        assertStatus(HttpStatus.CREATED, mvcResult);
+        assertMvcStatus(HttpStatus.CREATED, mvcResult);
 
         AccountDTO account = unmarshalJson(mvcResult, AccountDTO.class);
         assertEquals(3L, account.getId());
@@ -50,6 +50,6 @@ public class AccountControllerITest extends AppITests {
     public void createNoClientExceptionTest() throws Exception {
         MvcResult mvcResult = doPut("/account", new CreateAccountDTO(0L, "test", 978));
 
-        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
+        assertMvcError(ApplicationExceptionCode.CLIENT_NOT_FOUND, mvcResult);
     }
 }

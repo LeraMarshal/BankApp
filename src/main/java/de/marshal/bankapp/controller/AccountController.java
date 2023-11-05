@@ -1,11 +1,13 @@
 package de.marshal.bankapp.controller;
 
+import de.marshal.bankapp.dto.ResponseDTO;
 import de.marshal.bankapp.dto.account.AccountDTO;
 import de.marshal.bankapp.dto.account.CreateAccountDTO;
 import de.marshal.bankapp.entity.Account;
 import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.mapper.AccountMapper;
 import de.marshal.bankapp.service.AccountService;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,17 +26,19 @@ public class AccountController {
     private final AccountMapper accountMapper;
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> search(
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<List<AccountDTO>> search(
             @RequestParam long clientId
     ) {
         List<Account> accounts = accountService.findByClientId(clientId);
 
-        return ResponseEntity.ok(accountMapper.accountListToAccountDTOList(accounts));
+        return ResponseDTO.ok(accountMapper.accountListToAccountDTOList(accounts));
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<AccountDTO> create(
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDTO<AccountDTO> create(
             @RequestBody CreateAccountDTO createAccountDTO
     ) throws ApplicationException {
         Account account = accountService.create(
@@ -43,6 +47,6 @@ public class AccountController {
                 createAccountDTO.getCurrencyCode()
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountMapper.accountToAccountDTO(account));
+        return ResponseDTO.ok(accountMapper.accountToAccountDTO(account));
     }
 }

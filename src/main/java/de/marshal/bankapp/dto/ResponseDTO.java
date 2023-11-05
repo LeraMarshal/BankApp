@@ -1,6 +1,7 @@
 package de.marshal.bankapp.dto;
 
 import de.marshal.bankapp.exception.ApplicationException;
+import de.marshal.bankapp.exception.ApplicationExceptionCode;
 import de.marshal.bankapp.exception.UnspecifiedServerException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,23 +10,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ExceptionDTO {
-    public static ResponseEntity<ExceptionDTO> unspecified() {
-        UnspecifiedServerException ex = new UnspecifiedServerException("unspecified server exception");
-
-        return new ExceptionDTO(ex.getCode(), ex.getMessage()).responseEntity();
+@NoArgsConstructor
+public class ResponseDTO<T> {
+    public static <T> ResponseDTO<T> ok(T payload) {
+        return new ResponseDTO<>(0, null, payload);
     }
 
-    public static ResponseEntity<ExceptionDTO> from(ApplicationException ex) {
-        return new ExceptionDTO(ex.getCode(), ex.getMessage()).responseEntity();
+    public static <T> ResponseDTO<T> error() {
+        UnspecifiedServerException ex = new UnspecifiedServerException("unspecified server exception");
+
+        return new ResponseDTO<>(ex.getCode().value, ex.getMessage(), null);
+    }
+
+    public static <T> ResponseDTO<T> error(ApplicationException ex) {
+        return new ResponseDTO<>(ex.getCode().value, ex.getMessage(), null);
     }
 
     private int code;
     private String message;
+    private T payload;
 
-    public ResponseEntity<ExceptionDTO> responseEntity() {
+    public ResponseEntity<ResponseDTO<?>> entity() {
         HttpStatus status;
 
         if (code == 0) {

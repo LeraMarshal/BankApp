@@ -8,7 +8,7 @@ import de.marshal.bankapp.dto.client.RegisterClientDTO;
 import de.marshal.bankapp.entity.AccountStatus;
 import de.marshal.bankapp.entity.ClientStatus;
 import de.marshal.bankapp.exception.ApplicationException;
-import org.junit.jupiter.api.Assertions;
+import de.marshal.bankapp.exception.ApplicationExceptionCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
@@ -34,21 +34,21 @@ public class ClientControllerITest extends AppITests {
     public void searchByPhoneEmailExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client?phone=abc&email=abc");
 
-        assertExceptionDTO(ApplicationException.ILLEGAL_SEARCH_PARAMS, mvcResult);
+        assertMvcError(ApplicationExceptionCode.ILLEGAL_SEARCH_PARAMS, mvcResult);
     }
 
     @Test
     public void searchByNonExistingPhoneExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client?phone=490000000000");
 
-        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
+        assertMvcError(ApplicationExceptionCode.CLIENT_NOT_FOUND, mvcResult);
     }
 
     @Test
     public void searchByNonExistingEmailExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client?email=not.existing@gmail.com");
 
-        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
+        assertMvcError(ApplicationExceptionCode.CLIENT_NOT_FOUND, mvcResult);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ClientControllerITest extends AppITests {
     public void getByNonExistingIdExceptionTest() throws Exception {
         MvcResult mvcResult = doGet("/client/0");
 
-        assertExceptionDTO(ApplicationException.CLIENT_NOT_FOUND, mvcResult);
+        assertMvcError(ApplicationExceptionCode.CLIENT_NOT_FOUND, mvcResult);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ClientControllerITest extends AppITests {
                 "49100100100"
         ));
 
-        assertStatus(HttpStatus.CREATED, mvcResult);
+        assertMvcStatus(HttpStatus.CREATED, mvcResult);
 
         ClientWithAccountsDTO client = unmarshalJson(mvcResult, ClientWithAccountsDTO.class);
 
@@ -92,7 +92,7 @@ public class ClientControllerITest extends AppITests {
                 "49100100100"
         ));
 
-        assertExceptionDTO(ApplicationException.UNSPECIFIED, mvcResult);
+        assertMvcError(ApplicationExceptionCode.UNSPECIFIED, mvcResult);
     }
 
     private void verifyClient(MvcResult mvcResult) throws Exception {

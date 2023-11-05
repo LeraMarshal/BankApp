@@ -4,7 +4,6 @@ import de.marshal.bankapp.entity.Account;
 import de.marshal.bankapp.entity.Transaction;
 import de.marshal.bankapp.entity.TransactionStatus;
 import de.marshal.bankapp.exception.AccountNotFoundException;
-import de.marshal.bankapp.exception.ApplicationException;
 import de.marshal.bankapp.exception.CurrencyCodeMismatchException;
 import de.marshal.bankapp.exception.InsufficientFundsException;
 import de.marshal.bankapp.repository.AccountRepository;

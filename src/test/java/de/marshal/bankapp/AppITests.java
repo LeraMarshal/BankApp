@@ -1,7 +1,8 @@
 package de.marshal.bankapp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.marshal.bankapp.dto.ExceptionDTO;
+import de.marshal.bankapp.dto.ResponseDTO;
+import de.marshal.bankapp.exception.ApplicationExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,38 +51,38 @@ public class AppITests {
         ).andReturn();
     }
 
-    protected void assertStatus(HttpStatus status, MvcResult mvcResult) {
+    protected void assertMvcStatus(HttpStatus status, MvcResult mvcResult) {
         assertEquals(status.value(), mvcResult.getResponse().getStatus());
     }
 
-    protected void assertExceptionDTO(int code, MvcResult mvcResult) throws Exception {
-        HttpStatus expectedStatus;
+    protected void assertMvcError(ApplicationExceptionCode code, MvcResult mvcResult) throws Exception {
+        assertMvcStatus(code.status, mvcResult);
 
-        if (code == 0) {
-            expectedStatus = HttpStatus.OK;
-        } else if (code < 0) {
-            expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        } else {
-            expectedStatus = HttpStatus.BAD_REQUEST;
-        }
+        ResponseDTO<?> responseDTO = OBJECT_MAPPER.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                ResponseDTO.class
+        );
 
-        assertStatus(expectedStatus, mvcResult);
-
-        ExceptionDTO exceptionDTO = unmarshalJson(mvcResult, ExceptionDTO.class);
-        assertEquals(code, exceptionDTO.getCode());
+        assertEquals(code.value, responseDTO.getCode());
     }
 
     protected <T> List<T> unmarshalListJson(MvcResult from, Class<T> clazz) throws Exception {
-        return OBJECT_MAPPER.readValue(
+        ResponseDTO<List<T>> responseDTO = OBJECT_MAPPER.readValue(
                 from.getResponse().getContentAsString(),
-                OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz)
+                OBJECT_MAPPER.getTypeFactory().constructParametricType(ResponseDTO.class,
+                    OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz)
+                )
         );
+
+        return responseDTO.getPayload();
     }
 
     protected <T> T unmarshalJson(MvcResult from, Class<T> clazz) throws Exception {
-        return OBJECT_MAPPER.readValue(
+        ResponseDTO<T> responseDTO = OBJECT_MAPPER.readValue(
                 from.getResponse().getContentAsString(),
-                clazz
+                OBJECT_MAPPER.getTypeFactory().constructParametricType(ResponseDTO.class, clazz)
         );
+
+        return responseDTO.getPayload();
     }
 }

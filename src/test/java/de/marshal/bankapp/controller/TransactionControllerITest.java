@@ -4,7 +4,7 @@ import de.marshal.bankapp.AppITests;
 import de.marshal.bankapp.dto.transaction.CreateTransactionDTO;
 import de.marshal.bankapp.dto.transaction.TransactionDTO;
 import de.marshal.bankapp.exception.ApplicationException;
-import org.junit.jupiter.api.Assertions;
+import de.marshal.bankapp.exception.ApplicationExceptionCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class TransactionControllerITest extends AppITests {
     public void searchByClientIdReturnsCorrectAccountsTest() throws Exception {
         MvcResult mvcResult = doGet("/transaction?accountId=1");
 
-        assertStatus(HttpStatus.OK, mvcResult);
+        assertMvcStatus(HttpStatus.OK, mvcResult);
 
         List<TransactionDTO> transactions = unmarshalListJson(mvcResult, TransactionDTO.class);
         assertEquals(2, transactions.size());
@@ -37,7 +37,7 @@ public class TransactionControllerITest extends AppITests {
 
         MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(1L, 2L, 10000L, "test"));
 
-        assertStatus(HttpStatus.CREATED, mvcResult);
+        assertMvcStatus(HttpStatus.CREATED, mvcResult);
 
         TransactionDTO transaction = unmarshalJson(mvcResult, TransactionDTO.class);
         assertEquals(3L, transaction.getId());
@@ -52,13 +52,13 @@ public class TransactionControllerITest extends AppITests {
     public void createInsufficientFundsExceptionTest() throws Exception {
         MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(1L, 2L, 1000000L, "test"));
 
-        assertExceptionDTO(ApplicationException.INSUFFICIENT_FUNDS, mvcResult);
+        assertMvcError(ApplicationExceptionCode.INSUFFICIENT_FUNDS, mvcResult);
     }
 
     @Test
     public void createNonExistingAccountExceptionTest() throws Exception {
         MvcResult mvcResult = doPut("/transaction", new CreateTransactionDTO(3L, 2L, 10000L, "test"));
 
-        assertExceptionDTO(ApplicationException.ACCOUNT_NOT_FOUND, mvcResult);
+        assertMvcError(ApplicationExceptionCode.ACCOUNT_NOT_FOUND, mvcResult);
     }
 }

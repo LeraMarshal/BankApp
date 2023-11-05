@@ -1,5 +1,6 @@
 package de.marshal.bankapp.controller;
 
+import de.marshal.bankapp.dto.ResponseDTO;
 import de.marshal.bankapp.dto.client.ClientDTO;
 import de.marshal.bankapp.dto.client.ClientWithAccountsDTO;
 import de.marshal.bankapp.dto.client.RegisterClientDTO;
@@ -25,7 +26,8 @@ public class ClientController {
     private final ClientMapper clientMapper;
 
     @GetMapping
-    public ResponseEntity<ClientDTO> search(
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<ClientDTO> search(
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email
     ) throws ApplicationException {
@@ -39,22 +41,24 @@ public class ClientController {
             client = clientService.getClientByEmail(email);
         }
 
-        return ResponseEntity.ok(clientMapper.clientToClientDTO(client));
+        return ResponseDTO.ok(clientMapper.clientToClientDTO(client));
     }
 
     @GetMapping("/{id}")
     @Transactional
-    public ResponseEntity<ClientWithAccountsDTO> getById(
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<ClientWithAccountsDTO> getById(
             @PathVariable long id
     ) throws ApplicationException {
         Client client = clientService.getClientById(id);
 
-        return ResponseEntity.ok(clientMapper.clientToClientWithAccountsDTO(client));
+        return ResponseDTO.ok(clientMapper.clientToClientWithAccountsDTO(client));
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<ClientWithAccountsDTO> register(
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDTO<ClientWithAccountsDTO> register(
             @RequestBody RegisterClientDTO registerClientDTO
     ) throws ApplicationException {
         Client client = clientService.register(
@@ -65,7 +69,6 @@ public class ClientController {
                 registerClientDTO.getPhone()
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(clientMapper.clientToClientWithAccountsDTO(client));
+        return ResponseDTO.ok(clientMapper.clientToClientWithAccountsDTO(client));
     }
 }
