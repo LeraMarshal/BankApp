@@ -168,7 +168,7 @@ public class ClientControllerITest extends AppITests {
                 978
         ));
 
-        assertMvcError(ApplicationExceptionCode.UNSPECIFIED, mvcResult);
+        assertMvcError(ApplicationExceptionCode.CONSTRAINT_VIOLATION, mvcResult);
     }
 
     private void verifyClient(MvcResult mvcResult) throws Exception {

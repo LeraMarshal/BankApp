@@ -30,7 +30,8 @@ public class ClientRegistrationService {
             @NonNull String address,
             @NonNull String phone,
             int currencyCode
-    ) throws ProductNotFoundException, InvalidStatusException, InvalidAmountException, InvalidInterestRateException {
+    ) throws ProductNotFoundException, InvalidStatusException, InvalidAmountException, InvalidInterestRateException,
+            AccountNotFoundException, InsufficientFundsException, CurrencyCodeMismatchException {
         long defaultProductId = bankConfigurationProperties.defaultProductIdForCurrency(currencyCode);
         Product defaultProduct = productService.getById(defaultProductId);
 
@@ -54,7 +55,7 @@ public class ClientRegistrationService {
                 defaultProduct.getCurrencyCode()
         );
 
-        Agreement agreement = agreementService.create(account, defaultProduct);
+        Agreement agreement = agreementService.confirm(agreementService.create(account, defaultProduct));
 
         account.setAgreements(List.of(agreement));
         client.setAccounts(List.of(account));

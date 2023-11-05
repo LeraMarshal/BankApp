@@ -6,6 +6,7 @@ import de.marshal.bankapp.exception.UnspecifiedServerException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -21,6 +22,10 @@ public class ResponseDTO<T> {
         UnspecifiedServerException ex = new UnspecifiedServerException("unspecified server exception");
 
         return new ResponseDTO<>(ex.getCode().value, ex.getMessage(), null);
+    }
+
+    public static <T> ResponseDTO<T> constraintViolation() {
+        return new ResponseDTO<>(ApplicationExceptionCode.CONSTRAINT_VIOLATION.value, "constraint violation", null);
     }
 
     public static <T> ResponseDTO<T> error(ApplicationException ex) {

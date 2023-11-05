@@ -22,10 +22,6 @@ import java.util.UUID;
 public class LoggingFilter extends HttpFilter {
     public static final String REQUEST_ID_ATTRIBUTE = "RequestId";
 
-    public static String getRequestId(HttpServletRequest request) {
-        return request.getAttribute(REQUEST_ID_ATTRIBUTE).toString();
-    }
-
     @Override
     protected void doFilter(
             @NonNull HttpServletRequest request,
@@ -44,9 +40,6 @@ public class LoggingFilter extends HttpFilter {
         if (!StringUtils.hasText(requestId)) {
             requestId = UUID.randomUUID().toString();
         }
-
-        // Сохраняем его в аттрибуте, чтобы его могли использовать в дальнейшем.
-        request.setAttribute(REQUEST_ID_ATTRIBUTE, requestId);
 
         try {
             MDC.put(REQUEST_ID_ATTRIBUTE, requestId);

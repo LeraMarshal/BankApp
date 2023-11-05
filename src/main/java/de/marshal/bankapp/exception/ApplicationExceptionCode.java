@@ -18,6 +18,7 @@ public enum ApplicationExceptionCode {
     UNFULFILLED_OBLIGATIONS(9),
     INVALID_INTEREST_RATE(10),
     INVALID_AMOUNT(11),
+    CONSTRAINT_VIOLATION(12),
     ;
 
     public final int value;

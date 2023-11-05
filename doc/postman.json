@@ -1,0 +1,740 @@
+{
+  "info": {
+    "_postman_id": "24e89619-b480-4231-ab35-3e8c5e427243",
+    "name": "BankApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30794848"
+  },
+  "item": [
+    {
+      "name": "Register new client (client1@gmail.com) with EUR",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"firstName\": \"client\",\n    \"lastName\": \"1\",\n    \"email\": \"client1@gmail.com\",\n    \"address\": \"address 1\",\n    \"phone\": \"490001112231\",\n    \"currencyCode\": 978\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/client",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register new client (client2@gmail.com) with EUR",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"firstName\": \"client\",\n    \"lastName\": \"2\",\n    \"email\": \"client2@gmail.com\",\n    \"address\": \"address 2\",\n    \"phone\": \"490001112232\",\n    \"currencyCode\": 978\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/client",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register new client (client3@gmail.com) with USD",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"firstName\": \"client\",\n    \"lastName\": \"3\",\n    \"email\": \"client3@gmail.com\",\n    \"address\": \"address 3\",\n    \"phone\": \"490001112233\",\n    \"currencyCode\": 840\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/client",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search for client email client1@gmail.com",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/client?email=client1@gmail.com",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "client1@gmail.com"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search for client phone 490001112231",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/client?phone=490001112231",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client"
+          ],
+          "query": [
+            {
+              "key": "phone",
+              "value": "490001112231"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obtain client with id 1 with accounts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/client/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new USD account for client 1",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"clientId\": 1,\n    \"name\": \"My new account\",\n    \"currencyCode\": 840\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/account",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create another USD account for client 1",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"clientId\": 1,\n    \"name\": \"My new account\",\n    \"currencyCode\": 840\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/account",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "account"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete USD account for client 1",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"clientId\": 1,\n    \"name\": \"My new account\",\n    \"currencyCode\": 840\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/account/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "account",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new USD product (credit product)",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Credit product\",\n    \"currencyCode\": 840,\n    \"minInterestRate\": 5,\n    \"maxOfferLimit\": 500000\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/product",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "product"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new EUR product (credit product)",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Credit product\",\n    \"currencyCode\": 978,\n    \"minInterestRate\": 5,\n    \"maxOfferLimit\": 500000\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/product",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "product"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List all active products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/product",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "product"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new agreement for credit client1 in EUR",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"accountId\": 1,\n    \"productId\": 2,\n    \"interestRate\": 10,\n    \"amount\": 200000\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/agreement",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new agreement for credit client1 in USD",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"accountId\": 5,\n    \"productId\": 1,\n    \"interestRate\": 10,\n    \"amount\": 250000\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/agreement",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new agreement for credit client3 in USD",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"accountId\": 3,\n    \"productId\": 1,\n    \"interestRate\": 10,\n    \"amount\": 150000\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/agreement",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search for agreements on client 1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/agreement?clientId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement"
+          ],
+          "query": [
+            {
+              "key": "clientId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Confirm EUR agreement for client1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/agreement/4/confirm",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement",
+            "4",
+            "confirm"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Confirm USD agreement for client1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/agreement/5/confirm",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement",
+            "5",
+            "confirm"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Confirm USD agreement for client3",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/agreement/6/confirm",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement",
+            "6",
+            "confirm"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search for agreements on client 3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/agreement?clientId=3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement"
+          ],
+          "query": [
+            {
+              "key": "clientId",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obtain client with id 3 with accounts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/client/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "client",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new transaction from client1 to client3 in USD",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"debitAccountId\": 5,\n    \"creditAccountId\": 3,\n    \"amount\": 10000,\n    \"description\": \"Test\"\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/transaction",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transaction"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search for transactions on account 5",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/transaction?accountId=5&page=0&pageSize=3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transaction"
+          ],
+          "query": [
+            {
+              "key": "accountId",
+              "value": "5"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "pageSize",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new transaction from client3 to client1 in USD",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"debitAccountId\": 3,\n    \"creditAccountId\": 5,\n    \"amount\": 10000,\n    \"description\": \"Test return\"\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/transaction",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "transaction"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obtain bank account in EUR",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/account/-1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "account",
+            "-1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obtain bank account in USD",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/account/-2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "account",
+            "-2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Try to delete account 5",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/account/5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "account",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Try to delete agreement 4",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/agreement/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "agreement",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJCYW5rIHN1YnN5c3RlbSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NX0.-uDOUYe6kl6UQYsJzgJEoMjydPPj_cJ2H-kXb95JmqFv0pc6Hrrz8laVmCn6gMutUl4cmwxW0JCQpGh3ucoFdA",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
