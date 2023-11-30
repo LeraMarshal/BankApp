@@ -56,7 +56,7 @@ public class AgreementService {
 
     @Transactional
     public Agreement create(Account account, Product product) throws InvalidInterestRateException,
-            InvalidAmountException, InvalidStatusException {
+            InvalidAmountException, InvalidStatusException, CurrencyCodeMismatchException {
         return create(account, product, 0, 0L);
     }
 
@@ -67,7 +67,7 @@ public class AgreementService {
             int interestRate,
             long amount
     ) throws AccountNotFoundException, ProductNotFoundException, InvalidInterestRateException,
-            InvalidAmountException, InvalidStatusException {
+            InvalidAmountException, InvalidStatusException, CurrencyCodeMismatchException {
         Account account = accountService.getById(accountId);
         Product product = productService.getById(productId);
 
@@ -80,12 +80,16 @@ public class AgreementService {
             Product product,
             int interestRate,
             long amount
-    ) throws InvalidInterestRateException, InvalidAmountException, InvalidStatusException {
+    ) throws InvalidInterestRateException, CurrencyCodeMismatchException, InvalidAmountException, InvalidStatusException {
         if (account.getStatus() != AccountStatus.ACTIVE) {
             throw new InvalidStatusException("account status must be ACTIVE to create new agreement");
         }
         if (product.getStatus() != ProductStatus.ACTIVE) {
             throw new InvalidStatusException("product status must be ACTIVE to create new agreement");
+        }
+        if (!product.getCurrencyCode().equals(account.getCurrencyCode())) {
+            throw new CurrencyCodeMismatchException("product currency code " + product.getCurrencyCode()
+                    + " does not match account currency code " + account.getCurrencyCode());
         }
 
         int minInterestRate = product.getMinInterestRate();

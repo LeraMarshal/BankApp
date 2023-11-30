@@ -32,7 +32,7 @@ public class ProductControllerITest extends AppITests {
 
         // Then
         assertMvcStatus(HttpStatus.OK, mvcResult);
-        assertEquals(4, products.size());
+        assertEquals(5, products.size());
     }
 
     @Test

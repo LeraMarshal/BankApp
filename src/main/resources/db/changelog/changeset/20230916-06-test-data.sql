@@ -32,7 +32,8 @@ VALUES (1, 'debit', 'ACTIVE', 150000, 978),                            -- 1
 INSERT INTO products(name, status, currency_code, min_interest_rate, max_offer_limit)
 VALUES ('Deposit', 'ACTIVE', 978, -5, 5000000), -- 1
        ('Credit', 'ACTIVE', 978, 10, 1000000),  -- 2
-       ('Inactive product', 'INACTIVE', 978, -5, 500000) -- 3
+       ('Inactive product', 'INACTIVE', 978, -5, 500000), -- 3
+       ('Credit USD', 'ACTIVE', 840, 10, 1000000)  -- 4
 ;
 
 INSERT INTO agreements(account_id, product_id, status, interest_rate, debt)

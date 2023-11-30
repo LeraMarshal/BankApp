@@ -212,4 +212,18 @@ public class AgreementControllerITest extends AppITests {
         // Then
         assertMvcError(ApplicationExceptionCode.INVALID_AMOUNT, mvcResult);
     }
+
+    @Test
+    public void createCurrencyCodeMismatchException() throws Exception {
+        // When
+        MvcResult mvcResult = doPut("/agreement", new CreateAgreementDTO(
+                2L,
+                4L,
+                5,
+                50000L
+        ));
+
+        // Then
+        assertMvcError(ApplicationExceptionCode.CURRENCY_CODE_MISMATCH, mvcResult);
+    }
 }
